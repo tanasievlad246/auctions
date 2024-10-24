@@ -2,6 +2,8 @@
 **/.env
 **/dist
 **/.svelte-kit
+./data
+data/
 
 # Output
 .output
