@@ -1,0 +1,1 @@
+# Create a compose yaml file for a sveltekit project and a nestjs project use the Dockerfile.dev in ./auctions-service and ./auctions-client
