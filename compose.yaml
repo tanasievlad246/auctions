@@ -1,1 +1,26 @@
-# Create a compose yaml file for a sveltekit project and a nestjs project use the Dockerfile.dev in ./auctions-service and ./auctions-client
+services:
+  auctions-service:
+    build:
+      context: ./auctions-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./auctions-service:/app
+      - /app/node_modules
+    command: npm run start:dev
+    environment:
+      - NODE_ENV=development
+
+  auctions-client:
+    build:
+      context: ./auctions-client
+      dockerfile: Dockerfile.dev
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./auctions-client:/app
+      - /app/node_modules
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
