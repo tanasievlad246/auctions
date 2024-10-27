@@ -1,3 +1,4 @@
+import { AuctionStatus } from "src/common/enums/auction-status.enum";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
@@ -20,10 +21,17 @@ export class Auction {
     endingTransportDate: Date;
     @Column()
     startingPrice: number;
-    status: string;
+    @Column({
+        type: 'enum',
+        enum: AuctionStatus,
+    })
+    status: AuctionStatus;
     freightHandlings: any[];
     bids: any[];
     highestBid: any;
     winningBid: any;
-    winningBidder: any;
+    /**
+     * user id reference
+     */
+    winningBidder: string;
 }
