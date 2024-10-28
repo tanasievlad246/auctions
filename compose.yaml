@@ -39,7 +39,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=auctions
+      - POSTGRES_DB=transport_auctions
     networks:
       - postgres
     volumes:
