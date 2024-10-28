@@ -6,7 +6,8 @@ import { DataSource } from 'typeorm';
 import { Auction } from './auctions/entities/auction.entity';
 import { Bid } from './auctions/entities/bid.entity';
 import { FreightHandling } from './auctions/entities/freight-handling.entity';
-import { AppController } from './app/app.controller';
+import { AppController } from './app.controller';
+import { AuctionsTimerService } from './auctions/auctions-timer/auctions-timer.service';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { AppController } from './app/app.controller';
     TypeOrmModule.forFeature([Auction, Bid, FreightHandling]),
   ],
   controllers: [AuctionsController, AppController],
-  providers: [AuctionsService],
+  providers: [AuctionsService, AuctionsTimerService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}
