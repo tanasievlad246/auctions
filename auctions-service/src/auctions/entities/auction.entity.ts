@@ -1,5 +1,7 @@
 import { AuctionStatus } from "src/common/enums/auction-status.enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { FreightHandling } from "./freight-handling.entity";
+import { Bid } from "./bid.entity";
 
 @Entity({
     name: 'auctions'
@@ -24,14 +26,24 @@ export class Auction {
     @Column({
         type: 'enum',
         enum: AuctionStatus,
+        default: AuctionStatus.CLOSED
     })
     status: AuctionStatus;
-    freightHandlings: any[];
-    bids: any[];
-    highestBid: any;
-    winningBid: any;
+    @OneToMany(() => FreightHandling, freightHandling => freightHandling.auction)
+    loadings: FreightHandling[];
+    @OneToMany(() => FreightHandling, freightHandling => freightHandling.auction)
+    unloadings: FreightHandling[];
+    @OneToMany(() => Bid, bid => bid.auction)
+    bids: Bid[];
+    @OneToOne(() => Bid)
+    @JoinColumn({ name: 'highestBidId' })
+    highestBid: Bid;
+    @OneToOne(() => Bid)
+    @JoinColumn({ name: 'winningBidId' })
+    winningBid: Bid;
     /**
      * user id reference
      */
+    @Column()
     winningBidder: string;
 }
