@@ -5,8 +5,6 @@ export class AuctionDto {
     description: string;
     startDate: Date;
     endDate: Date;
-    startingTransportDate: Date;
-    endingTransportDate: Date;
     startingPrice: number;
     loadings: FreightHandlingDto[];
     unloadings: FreightHandlingDto[];

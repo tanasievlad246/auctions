@@ -30,16 +30,27 @@ export class AuctionsService {
     public async createAuction(auction: AuctionDto, loadings: FreightHandlingDto[], unloadings: FreightHandlingDto[]): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
             const createdAuction = await manager.save(Auction, auction);
-            loadings.forEach(async (loading) => {
-                const createdLoading = await manager.save(FreightHandling, loading);
-                createdLoading.auction = createdAuction;
-                await manager.save(loading);
-            });
-            unloadings.forEach(async (unloading) => {
-                const createdUnloading = await manager.save(FreightHandling, unloading);
-                createdUnloading.auction = createdAuction;
-                await manager.save(unloading);
-            });
+
+            const startingTransportDate = new Date(Math.min(
+                ...loadings.map(loading => new Date(loading.startDate).getTime())
+            ));
+            const endingTransportDate = new Date(Math.max(
+                ...unloadings.map(unloading => new Date(unloading.endDate).getTime())
+            ));
+
+            createdAuction.startingTransportDate = startingTransportDate;
+            createdAuction.endingTransportDate = endingTransportDate;
+
+            const createdLoadings = await Promise.all(loadings.map(async (loading) => {
+                return await manager.save(FreightHandling, loading);
+            }));
+            const createdUnloadings = await Promise.all(unloadings.map(async (unloading) => {
+                return await manager.save(FreightHandling, unloading);
+            }));
+
+            createdAuction.loadings = createdLoadings;
+            createdAuction.unloadings = createdUnloadings;
+
             const newAuction = await manager.findOneBy(Auction, { id: createdAuction.id });
             return newAuction;
         });
