@@ -1,2 +1,7 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+    import DateSelect from "@/components/date-select/DateSelect.svelte";
+    import RadiusSearchSelect from "@/components/radius-search-select/RadiusSearchSelect.svelte";
+</script>
+
+<DateSelect />
+<RadiusSearchSelect />
