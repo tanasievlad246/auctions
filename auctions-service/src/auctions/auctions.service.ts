@@ -7,15 +7,22 @@ import { Bid } from './entities/bid.entity';
 import { AuctionDto } from './dto/auction.dto';
 import { FreightHandlingDto } from './dto/freight-handling.dto';
 import { BidDto } from './dto/bid.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+
 
 @Injectable()
 export class AuctionsService {
     constructor(
         @InjectRepository(Auction) private auctionRepository: Repository<Auction>,
         @InjectRepository(Bid) private bidRepository: Repository<Bid>,
-        @InjectRepository(FreightHandling) private freightHandlingRepository: Repository<FreightHandling>,
-        private readonly dataSource: DataSource
+        private readonly dataSource: DataSource,
+        @InjectQueue('auctions') private readonly auctionsQueue: Queue,
     ) {}
+
+    public async testAuctionQueue() {
+        await this.auctionsQueue.add('test', { message: 'test' });
+    }
 
     public async getAuctions(): Promise<Auction[]> {
         return this.auctionRepository.find({

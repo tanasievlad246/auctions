@@ -7,10 +7,9 @@ services:
       - '3000:3000'
     volumes:
       - ./auctions-service:/app
-      - /app/node_modules
+      - ./auctions-service/node_modules:/app/node_modules
     command: npm run start:dev
-    environment:
-      - NODE_ENV=development
+    env_file: ./auctions-service/.env
     networks:
       - postgres
       - redis
