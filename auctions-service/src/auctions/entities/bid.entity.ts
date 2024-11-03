@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Auction } from "./auction.entity";
 import { BidDto } from "../dto/bid.dto";
 
@@ -21,4 +21,6 @@ export class Bid {
     startDate: Date;
     @Column()
     endDate: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 }

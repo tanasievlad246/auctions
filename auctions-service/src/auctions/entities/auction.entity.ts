@@ -1,5 +1,5 @@
 import { AuctionStatus } from "src/common/enums/auction-status.enum";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { FreightHandling } from "./freight-handling.entity";
 import { Bid } from "./bid.entity";
 
@@ -46,4 +46,6 @@ export class Auction {
      */
     @Column()
     winningBidder: string;
+    @CreateDateColumn()
+    createdAt: Date;
 }

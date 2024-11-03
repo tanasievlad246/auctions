@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Auction } from "./auction.entity";
 
 @Entity({
@@ -29,4 +29,6 @@ export class FreightHandling {
     contactPhone: string;
     @Column()
     contactEmail: string;
+    @CreateDateColumn()
+    createdAt: Date;
 }

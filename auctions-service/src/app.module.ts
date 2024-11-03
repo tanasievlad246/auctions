@@ -10,8 +10,7 @@ import { AppController } from './app.controller';
 import { AuctionsTimerService } from './auctions/auctions-timer/auctions-timer.service';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
-
-console.log(process.env)
+import { AuctionsTimerProcessor } from './auctions/auctions-timer/auctions-timer.processor';
 
 @Module({
   imports: [
@@ -24,7 +23,7 @@ console.log(process.env)
       database: process.env.DB_NAME || 'transport_auctions',
       schema: process.env.DB_SCHEMA || 'transport_auctions',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forFeature([Auction, Bid, FreightHandling]),
     ConfigModule.forRoot({
@@ -41,8 +40,9 @@ console.log(process.env)
     }),
   ],
   controllers: [AuctionsController, AppController],
-  providers: [AuctionsService, AuctionsTimerService],
+  providers: [AuctionsService, AuctionsTimerService, AuctionsTimerProcessor],
 })
+
 export class AppModule {
   constructor(private dataSource: DataSource) {}
 }
