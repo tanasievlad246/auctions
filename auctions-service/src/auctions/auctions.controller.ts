@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AuctionsService } from './auctions.service';
 import { AuctionDto } from './dto/auction.dto';
 import { FreightHandlingDto } from './dto/freight-handling.dto';

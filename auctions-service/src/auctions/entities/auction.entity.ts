@@ -46,6 +46,10 @@ export class Auction {
      */
     @Column()
     winningBidder: string;
+    @Column({
+        nullable: false
+    })
+    createdBy: string;
     @CreateDateColumn()
     createdAt: Date;
 }

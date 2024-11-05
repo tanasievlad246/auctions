@@ -139,6 +139,16 @@ export class AuctionsService {
         });
     }
 
+    public setWinnigBidAndCloseAuction(auctionId: string, bidId: string): Promise<Auction> {
+        return this.dataSource.transaction(async (manager) => {
+            const auction = await manager.findOneBy(Auction, { id: auctionId });
+            const bid = await manager.findOneBy(Bid, { id: bidId });
+            auction.status = AuctionStatus.CLOSED;
+            auction.winningBid = bid;
+            return await manager.save(Auction, auction);
+        });
+    }
+
     public async closeAuction(auctionId: string): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
             const auction = await manager.findOneBy(Auction, { id: auctionId });
@@ -152,6 +162,15 @@ export class AuctionsService {
             const auction = await manager.findOneBy(Auction, { id: auctionId });
             auction.status = AuctionStatus.OPEN;
             return await manager.save(Auction, auction);
+        });
+    }
+
+    public async getUserAuctions(userId: string): Promise<Auction[]> {
+        return this.auctionRepository.find({
+            where: {
+                createdBy: userId,
+            },
+            relations: ['bids', 'freightHandling'],
         });
     }
 }
