@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
-import { FreightHandling } from './entities/freight-handling.entity';
-import { Auction } from './entities/auction.entity';
-import { Bid } from './entities/bid.entity';
-import { AuctionDto } from './dto/auction.dto';
-import { FreightHandlingDto } from './dto/freight-handling.dto';
-import { BidDto } from './dto/bid.dto';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import { MessageType } from 'src/common/enums/message-type.enum';
-import { AuctionStatus } from 'src/common/enums/auction-status.enum';
-import { GetAuctionsFilter } from './dto/get-auctions-filter.dto';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {DataSource, MoreThan, Repository} from 'typeorm';
+import {FreightHandling} from './entities/freight-handling.entity';
+import {Auction} from './entities/auction.entity';
+import {Bid} from './entities/bid.entity';
+import {AuctionDto} from './dto/auction.dto';
+import {FreightHandlingDto} from './dto/freight-handling.dto';
+import {BidDto} from './dto/bid.dto';
+import {InjectQueue} from '@nestjs/bullmq';
+import {Queue} from 'bullmq';
+import {MessageType} from 'src/common/enums/message-type.enum';
+import {AuctionStatus} from 'src/common/enums/auction-status.enum';
+import {GetAuctionsFilter} from './dto/get-auctions-filter.dto';
 
 
 @Injectable()
@@ -22,11 +22,6 @@ export class AuctionsService {
         private readonly dataSource: DataSource,
         @InjectQueue('auctions') private readonly auctionsQueue: Queue,
     ) {}
-
-    public async testAuctionQueue() {
-        console.log('Sending test message to the queue');
-        await this.auctionsQueue.add('test', { message: 'test' });
-    }
 
     public async getAuctions(filter?: GetAuctionsFilter): Promise<Auction[]> {
         const hasFilters = Object.keys(filter).length > 0;
@@ -55,7 +50,39 @@ export class AuctionsService {
     }
 
     public async getAuctionById(id: string): Promise<Auction> {
-        return this.auctionRepository.findOneBy({ id });
+        const auction= await this.auctionRepository.findOneBy({ id });
+
+        // filter bids that were submitted after auction ended
+        if (auction.status === AuctionStatus.CLOSED) {
+            auction.bids = auction.bids.filter(bid => bid.createdAt > auction.endDate );
+        }
+
+        return auction;
+    }
+
+    public async getAuctionsThatNeedToStart(): Promise<Auction[]> {
+        return this.auctionRepository.find({
+            relations: ['bids', 'freightHandling'],
+            where: {
+                status: AuctionStatus.CLOSED,
+                startDate: MoreThan(new Date())
+            },
+            order: {
+                startDate: "ASC"
+            }
+        })
+    }
+
+    public async getAuctionsThatNeedToEnd(): Promise<Auction[]> {
+        return await this.auctionRepository.find({
+            relations: ['bids', 'freightHandling'],
+            where: {
+                status: AuctionStatus.OPEN
+            },
+            order: {
+                endDate: "DESC"
+            }
+        });
     }
 
     public async createAuction(auction: AuctionDto, loadings: FreightHandlingDto[], unloadings: FreightHandlingDto[]): Promise<Auction> {
@@ -82,7 +109,7 @@ export class AuctionsService {
             createdAuction.loadings = createdLoadings;
             createdAuction.unloadings = createdUnloadings;
 
-            const newAuction = await manager.findOneBy(Auction, { id: createdAuction.id });
+            const newAuction: Auction = await manager.findOneBy<Auction>(Auction, { id: createdAuction.id });
 
             /**
              * If the new auction created has no startDate, then it is not a timed auction
@@ -95,12 +122,12 @@ export class AuctionsService {
              * delay of time between now and auction's endDate
              */
             if (newAuction.startDate) {
-                this.auctionsQueue.add(MessageType.StartAuction, { auctionId: newAuction.id }, {
+                await this.auctionsQueue.add(MessageType.StartAuction, { auctionId: newAuction.id }, {
                     delay: new Date(newAuction.startDate).getTime() - new Date().getTime(),
                 });
             }
 
-            this.auctionsQueue.add(MessageType.CloseAuction, { auctionId: newAuction.id }, {
+            await this.auctionsQueue.add(MessageType.CloseAuction, { auctionId: newAuction.id }, {
                 delay: new Date(newAuction.endDate).getTime() - new Date().getTime(),
             });
 
@@ -110,7 +137,7 @@ export class AuctionsService {
 
     public async bidOnAuction(auctionId: string, bidDto: BidDto): Promise<Bid> {
         return await this.dataSource.transaction(async (manager) => {
-            const auction = await manager.findOneBy(Auction, { id: auctionId });
+            const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
 
             if (auction.status !== AuctionStatus.OPEN) {
                 throw new Error('Auction is not open');
@@ -141,8 +168,8 @@ export class AuctionsService {
 
     public setWinnigBidAndCloseAuction(auctionId: string, bidId: string): Promise<Auction> {
         return this.dataSource.transaction(async (manager) => {
-            const auction = await manager.findOneBy(Auction, { id: auctionId });
-            const bid = await manager.findOneBy(Bid, { id: bidId });
+            const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
+            const bid = await manager.findOneBy<Bid>(Bid, { id: bidId });
             auction.status = AuctionStatus.CLOSED;
             auction.winningBid = bid;
             return await manager.save(Auction, auction);
@@ -151,7 +178,7 @@ export class AuctionsService {
 
     public async closeAuction(auctionId: string): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
-            const auction = await manager.findOneBy(Auction, { id: auctionId });
+            const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
             auction.status = AuctionStatus.CLOSED;
             return await manager.save(Auction, auction);
         });
@@ -159,7 +186,7 @@ export class AuctionsService {
 
     public async startAuction(auctionId: string): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
-            const auction = await manager.findOneBy(Auction, { id: auctionId });
+            const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
             auction.status = AuctionStatus.OPEN;
             return await manager.save(Auction, auction);
         });

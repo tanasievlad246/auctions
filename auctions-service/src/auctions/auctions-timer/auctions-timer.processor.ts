@@ -1,9 +1,14 @@
 import { Processor, WorkerHost } from "@nestjs/bullmq";
 import { Job } from "bullmq";
 import { MessageType } from "src/common/enums/message-type.enum";
+import {AuctionsService} from "../auctions.service";
 
 @Processor('auctions')
 export class AuctionsTimerProcessor extends WorkerHost {
+    constructor(private readonly auctionService: AuctionsService) {
+        super();
+    }
+
     async process(job: Job, token?: string): Promise<any> {
         switch (job.name) {
             case MessageType.StartAuction:
@@ -15,13 +20,11 @@ export class AuctionsTimerProcessor extends WorkerHost {
         }
     }
 
-    async processAuctionStart(job: Job) {
-        console.log(job.data);
-        console.log('Processing auction start...');
+    async processAuctionStart(job: Job<{ auctionId: string }>) {
+        await this.auctionService.startAuction(job.data.auctionId);
     }
 
-    async processAuctionClose(job: Job) {
-        console.log(job.data);
-        console.log('Processing auction close...');
+    async processAuctionClose(job: Job<{ auctionId: string }>) {
+        await this.auctionService.closeAuction(job.data.auctionId);
     }
 }
