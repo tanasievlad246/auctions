@@ -5,8 +5,8 @@ export class AuctionsTimerService {
     constructor() {}
 
     public async onModuleInit(): Promise<void> {
-        this.syncAuctionsStartJob();
-        this.createAuctionStartJob();
+        this.syncAuctionsStartJob().then();
+        this.createAuctionStartJob().then();
     }
 
     public async createAuctionStartJob(): Promise<void> {
