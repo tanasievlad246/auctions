@@ -62,7 +62,6 @@ export class AuctionsService {
 
     public async getAuctionsThatNeedToStart(): Promise<Auction[]> {
         return this.auctionRepository.find({
-            relations: ['bids', 'freightHandling'],
             where: {
                 status: AuctionStatus.CLOSED,
                 startDate: MoreThan(new Date())
@@ -75,7 +74,6 @@ export class AuctionsService {
 
     public async getAuctionsThatNeedToEnd(): Promise<Auction[]> {
         return await this.auctionRepository.find({
-            relations: ['bids', 'freightHandling'],
             where: {
                 status: AuctionStatus.OPEN
             },
@@ -197,7 +195,7 @@ export class AuctionsService {
             where: {
                 createdBy: userId,
             },
-            relations: ['bids', 'freightHandling'],
+            relations: ['bids', 'loadings', 'unloadings'],
         });
     }
 }
