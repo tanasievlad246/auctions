@@ -1,0 +1,63 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auction {
+  bids: [Bid!]!
+  createdAt: DateTime!
+  description: String!
+  endDate: DateTime!
+  endingTransportDate: DateTime!
+  highestBid: Bid!
+  id: ID!
+  loadings: [FreightHandling!]!
+  startDate: DateTime!
+  startingPrice: Float!
+  startingTransportDate: DateTime!
+  status: AuctionStatus!
+  title: String!
+  unloadings: [FreightHandling!]!
+  winningBid: Bid!
+}
+
+enum AuctionStatus {
+  ADMIN_CANCELED
+  CANCELED
+  CLOSED
+  OPEN
+}
+
+type Bid {
+  amount: Float!
+  auction: Auction!
+  bidder: String!
+  createdAt: DateTime!
+  endDate: DateTime!
+  id: ID!
+  startDate: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type FreightHandling {
+  address: String!
+  auction: Auction!
+  city: String!
+  contactEmail: String!
+  contactPerson: String!
+  contactPhone: String!
+  country: String!
+  createdAt: DateTime!
+  endDate: DateTime!
+  id: ID!
+  price: Float!
+  startDate: DateTime!
+  zipCode: String!
+}
+
+type Query {
+  AuctionsListQuery: [Auction!]!
+}
