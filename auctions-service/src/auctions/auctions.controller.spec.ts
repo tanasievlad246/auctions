@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuctionsController } from './auctions.controller';
+import { AuctionsController } from './auctions.resolver';
 
 describe('AuctionsController', () => {
   let controller: AuctionsController;

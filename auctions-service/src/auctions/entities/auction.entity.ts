@@ -24,10 +24,14 @@ export class Auction {
     @Column()
     @Field()
     endDate: Date;
-    @Column()
+    @Column({
+        nullable: true,
+    })
     @Field()
     startingTransportDate: Date;
-    @Column()
+    @Column({
+        nullable: true,
+    })
     @Field()
     endingTransportDate: Date;
     @Column()
@@ -51,16 +55,22 @@ export class Auction {
     bids: Bid[];
     @OneToOne(() => Bid)
     @JoinColumn({name: 'highestBidId'})
-    @Field(() => Bid)
+    @Field(() => Bid, {
+        nullable: true
+    })
     highestBid: Bid;
     @OneToOne(() => Bid)
     @JoinColumn({name: 'winningBidId'})
-    @Field(() => Bid)
+    @Field(() => Bid, {
+        nullable: true
+    })
     winningBid: Bid;
     /**
      * user id reference
      */
-    @Column()
+    @Column({
+        nullable: true,
+    })
     winningBidder: string;
     @Column({
         nullable: false

@@ -21,9 +21,6 @@ export class FreightHandling {
     endDate: Date;
     @Column()
     @Field()
-    price: number;
-    @Column()
-    @Field()
     country: string;
     @Column()
     @Field()

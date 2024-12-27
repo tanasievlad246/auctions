@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common';
-import {AuctionsController} from './auctions/auctions.controller';
+import {AuctionsResolver} from './auctions/auctions.resolver';
 import {AuctionsService} from './auctions/auctions.service';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {DataSource} from 'typeorm';
@@ -49,7 +49,7 @@ import {join} from "path";
         })
     ],
     controllers: [AppController],
-    providers: [AuctionsService, AuctionsTimerService, AuctionsTimerProcessor, AuctionsController],
+    providers: [AuctionsService, AuctionsTimerService, AuctionsTimerProcessor, AuctionsResolver],
 })
 
 export class AppModule {

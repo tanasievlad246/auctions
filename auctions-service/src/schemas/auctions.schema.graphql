@@ -8,7 +8,7 @@ type Auction {
   description: String!
   endDate: DateTime!
   endingTransportDate: DateTime!
-  highestBid: Bid!
+  highestBid: Bid
   id: ID!
   loadings: [FreightHandling!]!
   startDate: DateTime!
@@ -17,7 +17,7 @@ type Auction {
   status: AuctionStatus!
   title: String!
   unloadings: [FreightHandling!]!
-  winningBid: Bid!
+  winningBid: Bid
 }
 
 enum AuctionStatus {
@@ -37,6 +37,17 @@ type Bid {
   startDate: DateTime!
 }
 
+input CreateAuctionInput {
+  createdBy: String!
+  description: String!
+  endDate: DateTime!
+  loadings: [FreightHandlingInput!]!
+  startDate: DateTime!
+  startingPrice: Float!
+  title: String!
+  unloadings: [FreightHandlingInput!]!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -53,11 +64,28 @@ type FreightHandling {
   createdAt: DateTime!
   endDate: DateTime!
   id: ID!
-  price: Float!
   startDate: DateTime!
   zipCode: String!
 }
 
+input FreightHandlingInput {
+  address: String!
+  city: String!
+  contactEmail: String!
+  contactPerson: String!
+  contactPhone: String!
+  country: String!
+  endDate: DateTime!
+  startDate: DateTime!
+  zipCode: String!
+}
+
+type Mutation {
+  createAuction(input: CreateAuctionInput!): Auction!
+  pickAuctionWinner: Auction!
+}
+
 type Query {
-  AuctionsListQuery: [Auction!]!
+  auctionById: Auction!
+  auctionsList: [Auction!]!
 }

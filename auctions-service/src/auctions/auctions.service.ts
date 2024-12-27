@@ -1,17 +1,17 @@
-import {Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {DataSource, MoreThan, Repository} from 'typeorm';
-import {FreightHandling} from './entities/freight-handling.entity';
-import {Auction} from './entities/auction.entity';
-import {Bid} from './entities/bid.entity';
-import {AuctionDto} from './dto/auction.dto';
-import {FreightHandlingDto} from './dto/freight-handling.dto';
-import {BidDto} from './dto/bid.dto';
-import {InjectQueue} from '@nestjs/bullmq';
-import {Queue} from 'bullmq';
-import {MessageType} from 'src/common/enums/message-type.enum';
-import {AuctionStatus} from 'src/common/enums/auction-status.enum';
-import {GetAuctionsFilter} from './dto/get-auctions-filter.dto';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, MoreThan, Repository } from 'typeorm';
+import { FreightHandling } from './entities/freight-handling.entity';
+import { Auction } from './entities/auction.entity';
+import { Bid } from './entities/bid.entity';
+import { AuctionDto } from './dto/auction.dto';
+import { FreightHandlingDto } from './dto/freight-handling.dto';
+import { BidDto } from './dto/bid.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { MessageType } from 'src/common/enums/message-type.enum';
+import { AuctionStatus } from 'src/common/enums/auction-status.enum';
+import { GetAuctionsFilter } from './dto/get-auctions-filter.dto';
 
 
 @Injectable()
@@ -21,19 +21,19 @@ export class AuctionsService {
         @InjectRepository(Bid) private bidRepository: Repository<Bid>,
         private readonly dataSource: DataSource,
         @InjectQueue('auctions') private readonly auctionsQueue: Queue,
-    ) {}
+    ) { }
 
     public async getAuctions(filter?: GetAuctionsFilter): Promise<Auction[]> {
-        const hasFilters = Object.keys(filter).length > 0;
+        const hasFilters = filter && Object.keys(filter).length > 0;
 
         if (!hasFilters) {
             return this.auctionRepository.find({
-                relations: ['bids', 'freightHandling'],
+                relations: ['bids', 'loadings', 'unloadings'],
             });
         }
 
         return this.auctionRepository.find({
-            relations: ['bids', 'freightHandling'],
+            relations: ['bids', 'loadings', 'unloadings'],
             where: {
                 startDate: filter?.startDate,
                 endDate: filter?.endDate,
@@ -50,11 +50,11 @@ export class AuctionsService {
     }
 
     public async getAuctionById(id: string): Promise<Auction> {
-        const auction= await this.auctionRepository.findOneBy({ id });
+        const auction = await this.auctionRepository.findOneBy({ id });
 
         // filter bids that were submitted after auction ended
         if (auction.status === AuctionStatus.CLOSED) {
-            auction.bids = auction.bids.filter(bid => bid.createdAt > auction.endDate );
+            auction.bids = auction.bids.filter(bid => bid.createdAt > auction.endDate);
         }
 
         return auction;
@@ -85,14 +85,31 @@ export class AuctionsService {
 
     public async createAuction(auction: AuctionDto, loadings: FreightHandlingDto[], unloadings: FreightHandlingDto[]): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
-            const createdAuction = await manager.save(Auction, auction);
+            const createdAuction = new Auction();
 
-            const startingTransportDate = new Date(Math.min(
-                ...loadings.map(loading => new Date(loading.startDate).getTime())
-            ));
-            const endingTransportDate = new Date(Math.max(
-                ...unloadings.map(unloading => new Date(unloading.endDate).getTime())
-            ));
+            createdAuction.title = auction.title;
+            createdAuction.description = auction.description;
+            createdAuction.startDate = auction.startDate;
+            createdAuction.endDate = auction.endDate;
+            createdAuction.startingPrice = auction.startingPrice;
+            createdAuction.createdBy = auction.createdBy;
+            createdAuction.status = AuctionStatus.CLOSED;
+
+            // Get all valid loading start dates
+            const loadingDates = loadings
+                .map(loading => loading.startDate)
+                .filter(date => date !== null && date !== undefined)
+                .map(date => typeof date === 'string' ? new Date(date) : date);
+
+            // Get all valid unloading end dates
+            const unloadingDates = unloadings
+                .map(unloading => unloading.endDate)
+                .filter(date => date !== null && date !== undefined)
+                .map(date => typeof date === 'string' ? new Date(date) : date);
+
+            // Find the earliest loading date and latest unloading date
+            const startingTransportDate = new Date(Math.min(...loadingDates.map(date => date.getTime())));
+            const endingTransportDate = new Date(Math.max(...unloadingDates.map(date => date.getTime())));
 
             createdAuction.startingTransportDate = startingTransportDate;
             createdAuction.endingTransportDate = endingTransportDate;
@@ -107,7 +124,7 @@ export class AuctionsService {
             createdAuction.loadings = createdLoadings;
             createdAuction.unloadings = createdUnloadings;
 
-            const newAuction: Auction = await manager.findOneBy<Auction>(Auction, { id: createdAuction.id });
+            const newAuction = await manager.save(Auction, createdAuction);
 
             /**
              * If the new auction created has no startDate, then it is not a timed auction
