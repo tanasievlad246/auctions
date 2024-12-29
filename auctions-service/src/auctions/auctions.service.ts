@@ -12,16 +12,20 @@ import { Queue } from 'bullmq';
 import { MessageType } from 'src/common/enums/message-type.enum';
 import { AuctionStatus } from 'src/common/enums/auction-status.enum';
 import { GetAuctionsFilter } from './dto/get-auctions-filter.dto';
+import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
+import { QueryService } from '@nestjs-query/core';
 
 
-@Injectable()
-export class AuctionsService {
+@QueryService(Auction)
+export class AuctionsService extends TypeOrmQueryService<Auction> {
     constructor(
         @InjectRepository(Auction) private auctionRepository: Repository<Auction>,
         @InjectRepository(Bid) private bidRepository: Repository<Bid>,
         private readonly dataSource: DataSource,
-        @InjectQueue('auctions') private readonly auctionsQueue: Queue,
-    ) { }
+        // @InjectQueue('auctions') private readonly auctionsQueue: Queue,
+    ) {
+        super(auctionRepository);
+     }
 
     public async getAuctions(filter?: GetAuctionsFilter): Promise<Auction[]> {
         const hasFilters = filter && Object.keys(filter).length > 0;
@@ -137,14 +141,14 @@ export class AuctionsService {
              * delay of time between now and auction's endDate
              */
             if (newAuction.startDate) {
-                await this.auctionsQueue.add(MessageType.StartAuction, { auctionId: newAuction.id }, {
-                    delay: new Date(newAuction.startDate).getTime() - new Date().getTime(),
-                });
+                // await this.auctionsQueue.add(MessageType.StartAuction, { auctionId: newAuction.id }, {
+                //     delay: new Date(newAuction.startDate).getTime() - new Date().getTime(),
+                // });
             }
 
-            await this.auctionsQueue.add(MessageType.CloseAuction, { auctionId: newAuction.id }, {
-                delay: new Date(newAuction.endDate).getTime() - new Date().getTime(),
-            });
+            // await this.auctionsQueue.add(MessageType.CloseAuction, { auctionId: newAuction.id }, {
+            //     delay: new Date(newAuction.endDate).getTime() - new Date().getTime(),
+            // });
 
             return newAuction;
         });

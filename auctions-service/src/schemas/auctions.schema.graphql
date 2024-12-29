@@ -20,6 +20,162 @@ type Auction {
   winningBid: Bid
 }
 
+type AuctionItemDto {
+  createdAt: DateTime!
+  createdBy: String!
+  description: String!
+  endDate: DateTime!
+  id: ID!
+  startDate: DateTime!
+  startingPrice: Float!
+  status: String!
+  title: String!
+}
+
+type AuctionItemDtoAggregateGroupBy {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+type AuctionItemDtoAvgAggregate {
+  startingPrice: Float
+}
+
+type AuctionItemDtoConnection {
+  """Array of edges."""
+  edges: [AuctionItemDtoEdge!]!
+
+  """Paging information"""
+  pageInfo: PageInfo!
+}
+
+type AuctionItemDtoCountAggregate {
+  createdAt: Int
+  createdBy: Int
+  description: Int
+  endDate: Int
+  id: Int
+  startDate: Int
+  startingPrice: Int
+  status: Int
+  title: Int
+}
+
+input AuctionItemDtoDeleteFilter {
+  and: [AuctionItemDtoDeleteFilter!]
+  createdAt: DateFieldComparison
+  createdBy: StringFieldComparison
+  description: StringFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [AuctionItemDtoDeleteFilter!]
+  startDate: DateFieldComparison
+  startingPrice: NumberFieldComparison
+  status: StringFieldComparison
+  title: StringFieldComparison
+}
+
+type AuctionItemDtoDeleteResponse {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+type AuctionItemDtoEdge {
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+
+  """The node containing the AuctionItemDto"""
+  node: AuctionItemDto!
+}
+
+input AuctionItemDtoFilter {
+  and: [AuctionItemDtoFilter!]
+  createdAt: DateFieldComparison
+  createdBy: StringFieldComparison
+  description: StringFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [AuctionItemDtoFilter!]
+  startDate: DateFieldComparison
+  startingPrice: NumberFieldComparison
+  status: StringFieldComparison
+  title: StringFieldComparison
+}
+
+type AuctionItemDtoMaxAggregate {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+type AuctionItemDtoMinAggregate {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+input AuctionItemDtoSort {
+  direction: SortDirection!
+  field: AuctionItemDtoSortFields!
+  nulls: SortNulls
+}
+
+enum AuctionItemDtoSortFields {
+  createdAt
+  createdBy
+  description
+  endDate
+  id
+  startDate
+  startingPrice
+  status
+  title
+}
+
+type AuctionItemDtoSumAggregate {
+  startingPrice: Float
+}
+
+input AuctionItemDtoUpdateFilter {
+  and: [AuctionItemDtoUpdateFilter!]
+  createdAt: DateFieldComparison
+  createdBy: StringFieldComparison
+  description: StringFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [AuctionItemDtoUpdateFilter!]
+  startDate: DateFieldComparison
+  startingPrice: NumberFieldComparison
+  status: StringFieldComparison
+  title: StringFieldComparison
+}
+
 enum AuctionStatus {
   ADMIN_CANCELED
   CANCELED
@@ -37,6 +193,9 @@ type Bid {
   startDate: DateTime!
 }
 
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
 input CreateAuctionInput {
   createdBy: String!
   description: String!
@@ -48,10 +207,81 @@ input CreateAuctionInput {
   unloadings: [FreightHandlingInput!]!
 }
 
+input CreateAuctionItemDto {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+input CreateManyAuctionItemDtosInput {
+  """Array of records to create"""
+  auctionItemDtos: [CreateAuctionItemDto!]!
+}
+
+input CreateOneAuctionItemDtoInput {
+  """The record to create"""
+  auctionItemDto: CreateAuctionItemDto!
+}
+
+input CursorPaging {
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+input DateFieldComparison {
+  between: DateFieldComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  is: Boolean
+  isNot: Boolean
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+  notBetween: DateFieldComparisonBetween
+  notIn: [DateTime!]
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input DeleteManyAuctionItemDtosInput {
+  """Filter to find records to delete"""
+  filter: AuctionItemDtoDeleteFilter!
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+input DeleteOneAuctionItemDtoInput {
+  """The id of the record to delete."""
+  id: ID!
+}
 
 type FreightHandling {
   address: String!
@@ -80,12 +310,145 @@ input FreightHandlingInput {
   zipCode: String!
 }
 
+input IDFilterComparison {
+  eq: ID
+  gt: ID
+  gte: ID
+  iLike: ID
+  in: [ID!]
+  is: Boolean
+  isNot: Boolean
+  like: ID
+  lt: ID
+  lte: ID
+  neq: ID
+  notILike: ID
+  notIn: [ID!]
+  notLike: ID
+}
+
 type Mutation {
   createAuction(input: CreateAuctionInput!): Auction!
+  createManyAuctionItemDtos(input: CreateManyAuctionItemDtosInput!): [AuctionItemDto!]!
+  createOneAuctionItemDto(input: CreateOneAuctionItemDtoInput!): AuctionItemDto!
+  deleteManyAuctionItemDtos(input: DeleteManyAuctionItemDtosInput!): DeleteManyResponse!
+  deleteOneAuctionItemDto(input: DeleteOneAuctionItemDtoInput!): AuctionItemDtoDeleteResponse!
   pickAuctionWinner: Auction!
+  updateManyAuctionItemDtos(input: UpdateManyAuctionItemDtosInput!): UpdateManyResponse!
+  updateOneAuctionItemDto(input: UpdateOneAuctionItemDtoInput!): AuctionItemDto!
+}
+
+input NumberFieldComparison {
+  between: NumberFieldComparisonBetween
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: Boolean
+  isNot: Boolean
+  lt: Float
+  lte: Float
+  neq: Float
+  notBetween: NumberFieldComparisonBetween
+  notIn: [Float!]
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+type PageInfo {
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
 }
 
 type Query {
   auctionById: Auction!
+  auctionItemDto(
+    """The id of the record to find."""
+    id: ID!
+  ): AuctionItemDto
+  auctionItemDtos(
+    """Specify to filter the records returned."""
+    filter: AuctionItemDtoFilter! = {}
+
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to sort results."""
+    sorting: [AuctionItemDtoSort!]! = []
+  ): AuctionItemDtoConnection!
   auctionsList: [Auction!]!
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input StringFieldComparison {
+  eq: String
+  gt: String
+  gte: String
+  iLike: String
+  in: [String!]
+  is: Boolean
+  isNot: Boolean
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  notILike: String
+  notIn: [String!]
+  notLike: String
+}
+
+input UpdateAuctionItemDto {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+input UpdateManyAuctionItemDtosInput {
+  """Filter used to find fields to update"""
+  filter: AuctionItemDtoUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateAuctionItemDto!
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+input UpdateOneAuctionItemDtoInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateAuctionItemDto!
 }
