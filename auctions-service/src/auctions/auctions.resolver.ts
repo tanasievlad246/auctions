@@ -1,14 +1,38 @@
-import { QueryService, InjectQueryService } from '@nestjs-query/core';
-import { CRUDResolver } from '@nestjs-query/query-graphql';
-import { Resolver, Query, Args } from '@nestjs/graphql';
-import { AuctionDto } from './dto/auction.dto';
+import { Resolver, Args, Mutation, ArgsType, Query } from '@nestjs/graphql';
+import { AuctionDto, AuctionItemDto } from './dto/auction.dto';
 import { Auction } from './entities/auction.entity';
+import { AuctionsService } from './auctions.service';
+import { Inject } from '@nestjs/common';
+import { ConnectionType, QueryArgsType } from '@nestjs-query/query-graphql';
+import { Filter, InjectQueryService, QueryService } from '@nestjs-query/core';
 
-@Resolver(() => AuctionDto)
-export class AuctionsResolver extends CRUDResolver(AuctionDto) {
+@ArgsType()
+export class AuctionItemQuery extends QueryArgsType(AuctionItemDto) {}
+export const AuctionItemConnection = AuctionItemQuery.ConnectionType;
+
+@Resolver(() => Auction)
+export class AuctionResolver {
   constructor(
-    @InjectQueryService(Auction) readonly service: QueryService<Auction>
-  ) {
-    super(service);
+    @Inject(AuctionsService) readonly service: AuctionsService,
+    @InjectQueryService(Auction) readonly queryService: QueryService<Auction>,
+  ) {}
+
+  // @Query(() => AuctionItemConnection, { name: 'auctions' })
+  // async getAuctions(
+  //   @Args() query: AuctionItemQuery,
+  // ): Promise<ConnectionType<AuctionItemDto>> {
+  //   const filter: Filter<AuctionItemDto> = {
+  //     ...query.filter,
+  //   }
+
+  //   return AuctionItemConnection.createFromPromise((q) => this.queryService.query(q), { ...query, ...{ filter } });
+  // }
+
+  @Mutation(() => AuctionItemDto)
+  async createAuction(
+    @Args('input') input: AuctionDto,
+  ): Promise<Auction> {
+    const { loadings, unloadings } = input;
+    return this.service.createAuction(input, loadings, unloadings);
   }
 }

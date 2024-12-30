@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuctionsResolver } from './auctions/auctions.resolver';
 import { AuctionsService } from './auctions/auctions.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -14,9 +13,10 @@ import { AuctionsTimerProcessor } from './auctions/auctions-timer/auctions-timer
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
-import { NestjsQueryGraphQLModule } from '@nestjs-query/query-graphql';
+import { NestjsQueryGraphQLModule, PagingStrategies } from '@nestjs-query/query-graphql';
 import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
 import { NestjsQueryTypeOrmModule } from '@nestjs-query/query-typeorm';
+import { AuctionResolver } from './auctions/auctions.resolver';
 
 @Module({
     imports: [
@@ -30,6 +30,7 @@ import { NestjsQueryTypeOrmModule } from '@nestjs-query/query-typeorm';
             schema: process.env.DB_SCHEMA || 'transport_auctions',
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: process.env.NODE_ENV !== 'production',
+            logging: process.env.NODE_ENV !== 'production',
         }),
         TypeOrmModule.forFeature([Auction, Bid, FreightHandling]),
         ConfigModule.forRoot({
@@ -51,13 +52,29 @@ import { NestjsQueryTypeOrmModule } from '@nestjs-query/query-typeorm';
             sortSchema: true,
         }),
         NestjsQueryGraphQLModule.forFeature({
-            imports: [NestjsQueryTypeOrmModule.forFeature([Auction, Bid, FreightHandling, DataSource])],
+            imports: [NestjsQueryTypeOrmModule.forFeature([Auction, Bid, FreightHandling])],
             services: [AuctionsService],
-            dtos: [{ DTOClass: AuctionDto }, { DTOClass: AuctionItemDto }],
+            resolvers: [{
+                DTOClass: AuctionItemDto,
+                EntityClass: Auction,
+                CreateDTOClass: AuctionDto,
+                UpdateDTOClass: AuctionDto,
+                ServiceClass: AuctionsService,
+                enableTotalCount: true,
+                pagingStrategy: PagingStrategies.OFFSET,
+                enableAggregate: true,
+                read: {
+                    one: { name: 'auction' },
+                    many: { name: 'auctions' }
+                },
+                create: { disabled: true },
+                update: { disabled: true },
+                delete: { disabled: true },
+            }],
         }),
     ],
     controllers: [AppController],
-    providers: [AuctionsService, AuctionsTimerService, AuctionsTimerProcessor, AuctionsResolver],
+    providers: [AuctionsService, AuctionsTimerService, AuctionsTimerProcessor, AuctionResolver],
 })
 
 export class AppModule {

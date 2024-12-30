@@ -1,4 +1,6 @@
-import { Field, InputType } from "@nestjs/graphql";
+import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Auction } from "../entities/auction.entity";
+import { FilterableField, Relation } from "@nestjs-query/query-graphql";
 
 @InputType('FreightHandlingInput')
 export class FreightHandlingDto {
@@ -20,4 +22,30 @@ export class FreightHandlingDto {
     contactPhone: string;
     @Field()
     contactEmail: string;
+}
+
+@ObjectType()
+export class FreightHandlingItem {
+    @FilterableField(type => ID)
+    id: string;
+    @FilterableField()
+    startDate: Date;
+    @FilterableField()
+    endDate: Date;
+    @FilterableField()
+    country: string;
+    @FilterableField()
+    city: string;
+    @FilterableField()
+    zipCode: string;
+    @FilterableField()
+    address: string;
+    @FilterableField()
+    contactPerson: string;
+    @FilterableField()
+    contactPhone: string;
+    @FilterableField()
+    contactEmail: string;
+    @FilterableField()
+    createdAt: Date;
 }

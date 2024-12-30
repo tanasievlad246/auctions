@@ -15,7 +15,7 @@ import { GetAuctionsFilter } from './dto/get-auctions-filter.dto';
 import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import { QueryService } from '@nestjs-query/core';
 
-
+@Injectable()
 @QueryService(Auction)
 export class AuctionsService extends TypeOrmQueryService<Auction> {
     constructor(
@@ -27,29 +27,9 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
         super(auctionRepository);
      }
 
-    public async getAuctions(filter?: GetAuctionsFilter): Promise<Auction[]> {
-        const hasFilters = filter && Object.keys(filter).length > 0;
-
-        if (!hasFilters) {
-            return this.auctionRepository.find({
-                relations: ['bids', 'loadings', 'unloadings'],
-            });
-        }
-
+    public async getAuctions(): Promise<Auction[]> {
         return this.auctionRepository.find({
             relations: ['bids', 'loadings', 'unloadings'],
-            where: {
-                startDate: filter?.startDate,
-                endDate: filter?.endDate,
-                loadings: {
-                    city: filter?.fromCity,
-                    country: filter?.fromCountry,
-                },
-                unloadings: {
-                    city: filter?.toCity,
-                    country: filter?.toCountry,
-                }
-            }
         });
     }
 
