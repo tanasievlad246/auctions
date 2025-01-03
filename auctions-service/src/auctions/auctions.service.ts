@@ -6,14 +6,13 @@ import { Auction } from './entities/auction.entity';
 import { Bid } from './entities/bid.entity';
 import { AuctionDto } from './dto/auction.dto';
 import { FreightHandlingDto } from './dto/freight-handling.dto';
-import { BidDto } from './dto/bid.dto';
+import { AuctionStatus } from 'src/common/enums/auction-status.enum';
+import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
+import { QueryService } from '@nestjs-query/core';
+import { CreateBidDto } from './dto/bid.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { MessageType } from 'src/common/enums/message-type.enum';
-import { AuctionStatus } from 'src/common/enums/auction-status.enum';
-import { GetAuctionsFilter } from './dto/get-auctions-filter.dto';
-import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
-import { QueryService } from '@nestjs-query/core';
 
 @Injectable()
 @QueryService(Auction)
@@ -22,7 +21,7 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
         @InjectRepository(Auction) private auctionRepository: Repository<Auction>,
         @InjectRepository(Bid) private bidRepository: Repository<Bid>,
         private readonly dataSource: DataSource,
-        // @InjectQueue('auctions') private readonly auctionsQueue: Queue,
+        @InjectQueue('auctions') private readonly auctionsQueue: Queue,
     ) {
         super(auctionRepository);
      }
@@ -121,22 +120,27 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
              * delay of time between now and auction's endDate
              */
             if (newAuction.startDate) {
-                // await this.auctionsQueue.add(MessageType.StartAuction, { auctionId: newAuction.id }, {
-                //     delay: new Date(newAuction.startDate).getTime() - new Date().getTime(),
-                // });
+                await this.auctionsQueue.add(MessageType.StartAuction, { auctionId: newAuction.id }, {
+                    delay: new Date(newAuction.startDate).getTime() - new Date().getTime(),
+                });
             }
 
-            // await this.auctionsQueue.add(MessageType.CloseAuction, { auctionId: newAuction.id }, {
-            //     delay: new Date(newAuction.endDate).getTime() - new Date().getTime(),
-            // });
+            await this.auctionsQueue.add(MessageType.CloseAuction, { auctionId: newAuction.id }, {
+                delay: new Date(newAuction.endDate).getTime() - new Date().getTime(),
+            });
 
             return newAuction;
         });
     }
 
-    public async bidOnAuction(auctionId: string, bidDto: BidDto): Promise<Bid> {
+    public async bidOnAuction(bidDto: CreateBidDto): Promise<Bid> {
         return await this.dataSource.transaction(async (manager) => {
-            const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
+            const auction = await manager.findOne(Auction, {
+                relations: ['bids'],
+                where: {
+                    id: bidDto.auctionId,
+                }
+            })
 
             if (auction.status !== AuctionStatus.OPEN) {
                 throw new Error('Auction is not open');
@@ -145,6 +149,7 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
             const bid = new Bid(bidDto);
             bid.auction = auction;
             const createdBid = await manager.save(Bid, bid);
+            console.log('AUCTION', auction);
             auction.bids.push(createdBid);
             await manager.save(auction);
             return createdBid;

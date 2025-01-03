@@ -1,4 +1,4 @@
-import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { Auction } from "../entities/auction.entity";
 import { FilterableField, Relation } from "@nestjs-query/query-graphql";
 
@@ -25,6 +25,7 @@ export class FreightHandlingDto {
 }
 
 @ObjectType()
+@Directive('@key(fields: "id")')
 export class FreightHandlingItem {
     @FilterableField(type => ID)
     id: string;

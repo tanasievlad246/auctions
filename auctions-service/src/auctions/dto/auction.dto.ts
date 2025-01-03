@@ -1,4 +1,4 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { FreightHandlingDto, FreightHandlingItem } from './freight-handling.dto';
 import { FilterableField, FilterableUnPagedRelation, IDField, UnPagedRelation } from '@nestjs-query/query-graphql';
 import { BidDto } from './bid.dto';
@@ -23,10 +23,11 @@ export class AuctionDto {
     createdBy: string;
 }
 
-@UnPagedRelation('bids', () => BidDto, { disableRemove: true })
-@FilterableUnPagedRelation('loadings', () => FreightHandlingItem, { disableRemove: true })
-@FilterableUnPagedRelation('unloadings', () => FreightHandlingItem, { disableRemove: true })
+@UnPagedRelation('bids', () => BidDto, { disableRemove: true, disableUpdate: true })
+@FilterableUnPagedRelation('loadings', () => FreightHandlingItem, { disableRemove: true, disableUpdate: true })
+@FilterableUnPagedRelation('unloadings', () => FreightHandlingItem, { disableRemove: true, disableUpdate: true })
 @ObjectType("AuctionItemDto")
+@Directive('@key(fields: "id")')
 export class AuctionItemDto {
     @IDField(() => ID)
     id!: string;

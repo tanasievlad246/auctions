@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { AuctionsTimerProcessor } from './auctions/auctions-timer/auctions-timer.processor';
 import { GraphQLModule } from "@nestjs/graphql";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
 import { NestjsQueryGraphQLModule, PagingStrategies } from '@nestjs-query/query-graphql';
 import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
@@ -45,14 +45,20 @@ import { AuctionResolver } from './auctions/auctions.resolver';
         BullModule.registerQueue({
             name: 'auctions',
         }),
-        GraphQLModule.forRoot<ApolloDriverConfig>({
-            driver: ApolloDriver,
+        GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+            driver: ApolloFederationDriver,
             playground: process.env.NODE_ENV !== 'production',
-            autoSchemaFile: join(process.cwd(), 'src/schemas/auctions.schema.graphql'),
+            autoSchemaFile: {
+                path: join(process.cwd(), 'src/schemas/auctions.schema.graphql'),
+                federation: 2, // Enable Federation 2.0
+            },
             sortSchema: true,
         }),
         NestjsQueryGraphQLModule.forFeature({
-            imports: [NestjsQueryTypeOrmModule.forFeature([Auction, Bid, FreightHandling])],
+            imports: [
+                NestjsQueryTypeOrmModule.forFeature([Auction, Bid, FreightHandling]),
+                BullModule.registerQueue({ name: 'auctions' })
+            ],
             services: [AuctionsService],
             resolvers: [{
                 DTOClass: AuctionItemDto,
@@ -70,6 +76,7 @@ import { AuctionResolver } from './auctions/auctions.resolver';
                 create: { disabled: true },
                 update: { disabled: true },
                 delete: { disabled: true },
+                referenceBy: { key: 'id' },
             }],
         }),
     ],

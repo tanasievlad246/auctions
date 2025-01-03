@@ -2,30 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input AddBidsToAuctionItemDtoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input AddLoadingsToAuctionItemDtoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input AddUnloadingsToAuctionItemDtoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
 type AuctionItemDto {
   bids(
     """Specify to filter the records returned."""
@@ -113,8 +89,9 @@ type AuctionItemDtoAvgAggregate {
 type AuctionItemDtoBidsAggregateGroupBy {
   amount: Float
   bidder: String
+  createdAt: DateTime
   endDate: DateTime
-  id: String
+  id: ID
   startDate: DateTime
 }
 
@@ -134,6 +111,7 @@ type AuctionItemDtoBidsAvgAggregate {
 type AuctionItemDtoBidsCountAggregate {
   amount: Int
   bidder: Int
+  createdAt: Int
   endDate: Int
   id: Int
   startDate: Int
@@ -142,16 +120,18 @@ type AuctionItemDtoBidsCountAggregate {
 type AuctionItemDtoBidsMaxAggregate {
   amount: Float
   bidder: String
+  createdAt: DateTime
   endDate: DateTime
-  id: String
+  id: ID
   startDate: DateTime
 }
 
 type AuctionItemDtoBidsMinAggregate {
   amount: Float
   bidder: String
+  createdAt: DateTime
   endDate: DateTime
-  id: String
+  id: ID
   startDate: DateTime
 }
 
@@ -397,8 +377,9 @@ type AuctionItemDtoUnloadingsMinAggregate {
 type BidDto {
   amount: Float!
   bidder: String!
+  createdAt: DateTime!
   endDate: DateTime!
-  id: String!
+  id: ID!
   startDate: DateTime!
 }
 
@@ -406,8 +387,9 @@ input BidDtoAggregateFilter {
   amount: NumberFieldComparison
   and: [BidDtoAggregateFilter!]
   bidder: StringFieldComparison
+  createdAt: DateFieldComparison
   endDate: DateFieldComparison
-  id: StringFieldComparison
+  id: IDFilterComparison
   or: [BidDtoAggregateFilter!]
   startDate: DateFieldComparison
 }
@@ -416,8 +398,9 @@ input BidDtoFilter {
   amount: NumberFieldComparison
   and: [BidDtoFilter!]
   bidder: StringFieldComparison
+  createdAt: DateFieldComparison
   endDate: DateFieldComparison
-  id: StringFieldComparison
+  id: IDFilterComparison
   or: [BidDtoFilter!]
   startDate: DateFieldComparison
 }
@@ -431,6 +414,7 @@ input BidDtoSort {
 enum BidDtoSortFields {
   amount
   bidder
+  createdAt
   endDate
   id
   startDate
@@ -448,6 +432,14 @@ input CreateAuctionInput {
   startingPrice: Float!
   title: String!
   unloadings: [FreightHandlingInput!]!
+}
+
+input CreateBidInput {
+  amount: Float!
+  auctionId: String!
+  bidder: String!
+  endDate: DateTime!
+  startDate: DateTime!
 }
 
 input DateFieldComparison {
@@ -571,13 +563,8 @@ input IDFilterComparison {
 }
 
 type Mutation {
-  addBidsToAuctionItemDto(input: AddBidsToAuctionItemDtoInput!): AuctionItemDto!
-  addLoadingsToAuctionItemDto(input: AddLoadingsToAuctionItemDtoInput!): AuctionItemDto!
-  addUnloadingsToAuctionItemDto(input: AddUnloadingsToAuctionItemDtoInput!): AuctionItemDto!
+  bidOnAuction(input: CreateBidInput!): AuctionItemDto!
   createAuction(input: CreateAuctionInput!): AuctionItemDto!
-  setBidsOnAuctionItemDto(input: SetBidsOnAuctionItemDtoInput!): AuctionItemDto!
-  setLoadingsOnAuctionItemDto(input: SetLoadingsOnAuctionItemDtoInput!): AuctionItemDto!
-  setUnloadingsOnAuctionItemDto(input: SetUnloadingsOnAuctionItemDtoInput!): AuctionItemDto!
 }
 
 input NumberFieldComparison {
@@ -649,30 +636,6 @@ type Query {
     """Specify to sort results."""
     sorting: [AuctionItemDtoSort!]! = []
   ): AuctionItemDtoConnection!
-}
-
-input SetBidsOnAuctionItemDtoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input SetLoadingsOnAuctionItemDtoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input SetUnloadingsOnAuctionItemDtoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
 }
 
 """Sort Directions"""
