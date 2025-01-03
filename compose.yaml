@@ -1,4 +1,19 @@
 services:
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./gateway:/app
+      - ./gateway/node_modules:/app/node_modules
+    command: npm run start:dev
+    env_file: ./gateway/.env
+    networks:
+      - postgres
+      - redis
+
   auctions-service:
     build:
       context: ./auctions-service
