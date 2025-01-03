@@ -4,7 +4,7 @@ services:
       context: ./auctions-service
       dockerfile: Dockerfile.dev
     ports:
-      - '3000:3000'
+      - '3001:3001'
     volumes:
       - ./auctions-service:/app
       - ./auctions-service/node_modules:/app/node_modules
