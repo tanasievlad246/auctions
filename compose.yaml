@@ -1,4 +1,22 @@
 services:
+  users-service:
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3002:3002'
+    volumes:
+      - ./users-service:/app
+      - ./users-service/node_modules:/app/node_modules
+    command: npm run start:dev
+    env_file: ./users-service/.env
+    networks:
+      - postgres
+      - redis
+    depends_on:
+      - postgres
+      - redis
+
   gateway:
     build:
       context: ./gateway
@@ -13,6 +31,11 @@ services:
     networks:
       - postgres
       - redis
+    depends_on:
+      - postgres
+      - redis
+      - auctions-service
+      - users-service
 
   auctions-service:
     build:
