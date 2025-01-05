@@ -77,15 +77,16 @@ input OffsetPaging {
   offset: Int
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 type Query {
   user(
     """The id of the record to find."""
     id: ID!
   ): UserDto
-  userDtoAggregate(
-    """Filter to find records to aggregate on"""
-    filter: UserDtoAggregateFilter
-  ): [UserDtoAggregateResponse!]!
   users(
     """Specify to filter the records returned."""
     filter: UserDtoFilter! = {}
@@ -138,19 +139,6 @@ type UserDto {
   updatedAt: DateTime!
 }
 
-input UserDtoAggregateFilter {
-  and: [UserDtoAggregateFilter!]
-  createdAt: DateFieldComparison
-  email: StringFieldComparison
-  firstName: StringFieldComparison
-  id: IDFilterComparison
-  lastName: StringFieldComparison
-  or: [UserDtoAggregateFilter!]
-  phoneNumber: StringFieldComparison
-  role: StringFieldComparison
-  updatedAt: DateFieldComparison
-}
-
 type UserDtoAggregateGroupBy {
   createdAt: DateTime
   email: String
@@ -160,13 +148,6 @@ type UserDtoAggregateGroupBy {
   phoneNumber: String
   role: String
   updatedAt: DateTime
-}
-
-type UserDtoAggregateResponse {
-  count: UserDtoCountAggregate
-  groupBy: UserDtoAggregateGroupBy
-  max: UserDtoMaxAggregate
-  min: UserDtoMinAggregate
 }
 
 type UserDtoConnection {
