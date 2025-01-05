@@ -1,0 +1,10 @@
+{
+    "name": "transport-management",
+    "private": true,
+    "scripts": {
+        "build": "pnpm -r build",
+        "dev": "docker compose up --build",
+        "down": "docker compose down -v",
+        "test": "pnpm -r test"
+    }
+}
