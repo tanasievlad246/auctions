@@ -26,6 +26,7 @@ export class FreightHandlingDto {
 
 @ObjectType()
 @Directive('@key(fields: "id")')
+@Directive('@shareable')
 export class FreightHandlingItem {
     @FilterableField(type => ID)
     id: string;

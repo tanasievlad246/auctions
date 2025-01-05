@@ -22,6 +22,7 @@ export class CreateBidDto {
 // You may also want a response DTO for bids
 @ObjectType('BidDto')
 @Directive('@key(fields: "id")')
+@Directive('@shareable')
 export class BidDto {
     @FilterableField(() => ID)
     id: string;
