@@ -1,15 +1,25 @@
 FROM node:22
 
-RUN npm install -g pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-COPY package.json .
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+
+COPY common/package.json ./common/
+COPY auctions-service/package.json ./auctions-service/
 
 RUN pnpm install
 
-COPY . .
+COPY common ./common
+COPY auctions-service ./auctions-service
 
-EXPOSE 3000
+RUN cd common && pnpm build
+
+WORKDIR /app/auctions-service
+
+EXPOSE 3001
 
 CMD ["pnpm", "run", "start:dev"]

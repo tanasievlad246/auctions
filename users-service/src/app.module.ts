@@ -3,13 +3,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
-import { NestjsQueryGraphQLModule } from '@nestjs-query/query-graphql';
+import { NestjsQueryGraphQLModule, PagingStrategies } from '@nestjs-query/query-graphql';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { NestjsQueryTypeOrmModule } from '@nestjs-query/query-typeorm';
 import { UserService } from 'users/users.service';
 import { UsersController } from 'users/users.controller';
 import { User } from 'users/entities/user.entity';
+import { UserDto } from 'users/dto/user.dto';
+import { CreateUserDto } from 'users/dto/create-user.dto';
 
 @Module({
   imports: [
@@ -46,14 +48,38 @@ import { User } from 'users/entities/user.entity';
     }),
     NestjsQueryGraphQLModule.forFeature({
       imports: [
-        NestjsQueryTypeOrmModule.forFeature([]),
+        NestjsQueryTypeOrmModule.forFeature([User]),
         BullModule.registerQueue({ name: 'auctions' })
       ],
-      services: [],
-      resolvers: [],
+      services: [UserService],
+      resolvers: [{
+        DTOClass: UserDto,
+        EntityClass: User,
+        CreateDTOClass: CreateUserDto,
+        UpdateDTOClass: CreateUserDto,
+        ServiceClass: UserService,
+        enableTotalCount: true,
+        pagingStrategy: PagingStrategies.OFFSET,
+        enableAggregate: true,
+        read: {
+          one: { name: 'user' },
+          many: { name: 'users' }
+        },
+        create: {
+          one: {
+            name: 'createUser',
+          },
+          many: {
+            disabled: true,
+          }
+        },
+        update: { disabled: true },
+        delete: { disabled: true },
+        referenceBy: { key: 'id' },
+      }],
     }),
   ],
-  controllers: [UsersController],
-  providers: [UserService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule { }

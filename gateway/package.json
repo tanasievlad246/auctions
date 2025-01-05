@@ -1,5 +1,5 @@
 {
-  "name": "gateway",
+  "name": "@transports-cms/gateway",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -39,7 +39,7 @@
     "ts-morph": "^25.0.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.0.0",
+    "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^5.0.0",

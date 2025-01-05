@@ -1,6 +1,5 @@
 packages:
   - 'common'
-  - 'auctions-service/'
-  - 'users-service/'
-  - 'gateway/'
-  - 'auctions-client/'
+  - 'auctions'
+  - 'users'
+  - 'gateway'

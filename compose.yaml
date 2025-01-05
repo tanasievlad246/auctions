@@ -1,36 +1,38 @@
 services:
   users-service:
     build:
-      context: ./users-service
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./users-service/Dockerfile.dev
     ports:
       - '3002:3002'
     volumes:
-      - ./users-service:/app
-      - ./users-service/node_modules:/app/node_modules
+      - ./users:/app/users
+      - ./common:/app/common
+      - users-service_node_modules:/app/users/node_modules
+      - root_node_modules:/app/node_modules
     command: npm run start:dev
     env_file: ./users-service/.env
     networks:
-      - postgres
-      - redis
+      - backend
     depends_on:
       - postgres
       - redis
 
   gateway:
     build:
-      context: ./gateway
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./gateway/Dockerfile.dev
     ports:
       - '3000:3000'
     volumes:
-      - ./gateway:/app
-      - ./gateway/node_modules:/app/node_modules
+      - ./gateway:/app/gateway
+      - ./common:/app/common
+      - gateway_node_modules:/app/gateway/node_modules
+      - root_node_modules:/app/node_modules
     command: npm run start:dev
     env_file: ./gateway/.env
     networks:
-      - postgres
-      - redis
+      - backend
     depends_on:
       - postgres
       - redis
@@ -39,18 +41,19 @@ services:
 
   auctions-service:
     build:
-      context: ./auctions-service
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./auctions-service/Dockerfile.dev
     ports:
       - '3001:3001'
     volumes:
-      - ./auctions-service:/app
-      - ./auctions-service/node_modules:/app/node_modules
+      - ./auctions-service:/appauctions-service/
+      - ./common:/app/common
+      - auctions-service_node_modules:/app/auctions-service/node_modules
+      - root_node_modules:/app/node_modules
     command: npm run start:dev
     env_file: ./auctions-service/.env
     networks:
-      - postgres
-      - redis
+      - backend
     depends_on:
       - postgres
       - redis
@@ -78,7 +81,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=transport_auctions
     networks:
-      - postgres
+      - backend
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -92,14 +95,16 @@ services:
       - ./redis/create-queues.sh:/docker-entrypoint-initdb.d/create-queues.sh
     command: ["/bin/bash", "-c", "redis-server --appendonly yes & sleep 5 && /docker-entrypoint-initdb.d/create-queues.sh && wait"]
     networks:
-      - redis
+      - backend
 
 networks:
-  postgres:
-    driver: bridge
-  redis:
+  backend:
     driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
+  auctions-service_node_modules:
+  users-service_node_modules:
+  gateway_node_modules:
+  root_node_modules:
