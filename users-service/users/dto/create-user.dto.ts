@@ -1,5 +1,5 @@
 import { FilterableField } from "@nestjs-query/query-graphql";
-import { InputType } from "@nestjs/graphql";
+import { Directive, InputType } from "@nestjs/graphql";
 
 @InputType()
 export class CreateUserDto {

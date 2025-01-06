@@ -3,6 +3,7 @@ import { Directive, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 @Directive('@key(fields: "id")')
+@Directive('@shareable')
 export class UserDto {
     @FilterableField(() => ID)
     id: string;

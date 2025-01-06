@@ -1,15 +1,13 @@
 services:
   users-service:
     build:
-      context: .
-      dockerfile: ./users-service/Dockerfile.dev
+      context: ./users-service
+      dockerfile: Dockerfile.dev
     ports:
       - '3002:3002'
     volumes:
-      - ./users:/app/users
-      - ./common:/app/common
-      - users-service_node_modules:/app/users/node_modules
-      - root_node_modules:/app/node_modules
+      - ./users-service:/app
+      - ./users-service/node_modules:/app/node_modules
     command: npm run start:dev
     env_file: ./users-service/.env
     networks:
@@ -17,39 +15,41 @@ services:
     depends_on:
       - postgres
       - redis
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/app/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   gateway:
     build:
-      context: .
-      dockerfile: ./gateway/Dockerfile.dev
+      context: ./gateway
+      dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
     volumes:
-      - ./gateway:/app/gateway
-      - ./common:/app/common
-      - gateway_node_modules:/app/gateway/node_modules
-      - root_node_modules:/app/node_modules
+      - ./gateway:/app
+      - ./gateway/node_modules:/app/node_modules
     command: npm run start:dev
     env_file: ./gateway/.env
     networks:
       - backend
     depends_on:
-      - postgres
-      - redis
-      - auctions-service
-      - users-service
+      users-service:
+        condition: service_healthy
+      auctions-service:
+        condition: service_healthy
 
   auctions-service:
     build:
-      context: .
-      dockerfile: ./auctions-service/Dockerfile.dev
+      context: ./auctions-service
+      dockerfile: Dockerfile.dev
     ports:
       - '3001:3001'
     volumes:
-      - ./auctions-service:/appauctions-service/
-      - ./common:/app/common
-      - auctions-service_node_modules:/app/auctions-service/node_modules
-      - root_node_modules:/app/node_modules
+      - ./auctions-service:/app
+      - ./auctions-service/node_modules:/app/node_modules
     command: npm run start:dev
     env_file: ./auctions-service/.env
     networks:
@@ -57,6 +57,12 @@ services:
     depends_on:
       - postgres
       - redis
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/app/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   auctions-client:
     build:
@@ -104,7 +110,3 @@ networks:
 volumes:
   postgres_data:
   redis_data:
-  auctions-service_node_modules:
-  users-service_node_modules:
-  gateway_node_modules:
-  root_node_modules:

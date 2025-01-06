@@ -1,22 +1,14 @@
 FROM node:22
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY pnpm-workspace.yaml ./
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-
-COPY common/package.json ./common/
-COPY users-service/package.json ./users-service/
+COPY package.json .
 
 RUN pnpm install
 
-COPY common ./common
-COPY users-service ./users-service
-
-RUN cd common && pnpm build
+COPY . .
 
 EXPOSE 3002
 

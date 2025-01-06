@@ -12,6 +12,8 @@ import { UsersController } from 'users/users.controller';
 import { User } from 'users/entities/user.entity';
 import { UserDto } from 'users/dto/user.dto';
 import { CreateUserDto } from 'users/dto/create-user.dto';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -60,7 +62,6 @@ import { CreateUserDto } from 'users/dto/create-user.dto';
         ServiceClass: UserService,
         enableTotalCount: true,
         pagingStrategy: PagingStrategies.OFFSET,
-        enableAggregate: true,
         read: {
           one: { name: 'user' },
           many: { name: 'users' }
@@ -79,7 +80,7 @@ import { CreateUserDto } from 'users/dto/create-user.dto';
       }],
     }),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }

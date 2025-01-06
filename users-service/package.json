@@ -23,6 +23,7 @@
     "@apollo/gateway": "^2.9.3",
     "@apollo/server": "^4.11.3",
     "@apollo/subgraph": "^2.9.3",
+    "@nestjs-query/core": "^0.30.0",
     "@nestjs-query/query-graphql": "^0.30.0",
     "@nestjs-query/query-typeorm": "^0.30.0",
     "@nestjs/apollo": "^12.2.2",

@@ -1,6 +1,6 @@
 import { Directive, Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { FreightHandlingDto, FreightHandlingItem } from './freight-handling.dto';
-import { FilterableField, FilterableUnPagedRelation, IDField, UnPagedRelation } from '@nestjs-query/query-graphql';
+import { FilterableField, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions, UnPagedRelation } from '@nestjs-query/query-graphql';
 import { BidDto } from './bid.dto';
 
 @InputType('CreateAuctionInput')
@@ -28,6 +28,7 @@ export class AuctionDto {
 @FilterableUnPagedRelation('unloadings', () => FreightHandlingItem, { disableRemove: true, disableUpdate: true })
 @ObjectType("AuctionItemDto")
 @Directive('@key(fields: "id")')
+@Directive('@shareable')
 export class AuctionItemDto {
     @IDField(() => ID)
     id!: string;
@@ -47,14 +48,4 @@ export class AuctionItemDto {
     status!: string;
     @FilterableField()
     createdAt!: Date;
-    // @Field(() => [BidDto])
-    // bids!: BidDto[];
-    // @Field(() => [FreightHandlingItem])
-    // loadings!: FreightHandlingItem[];
-    // @Field(() => [FreightHandlingItem])
-    // unloadings!: FreightHandlingItem[];
-    // @Field(() => BidDto, { nullable: true })
-    // highestBid?: BidDto;
-    // @Field(() => BidDto, { nullable: true })
-    // winningBid?: BidDto;
 }
