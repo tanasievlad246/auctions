@@ -9,6 +9,7 @@ import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
       driver: ApolloGatewayDriver,
       server: {
         playground: process.env.NODE_ENV !== 'production',
+        debug: process.env.NODE_ENV !== 'production',
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({

@@ -1,45 +1,12 @@
-import { Type } from "@nestjs/common";
 import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
 
-@ObjectType('PageInfo')
-@Directive('@shareable')
+@ObjectType('OffsetPageInfo')
+@Directive('@external')
 export class PageInfo {
     @Field(() => Boolean)
-    @Directive('@shareable')
-    hasNextPage!: boolean;
-
+    @Directive('@extendable')
+    hasNextPage: boolean;
     @Field(() => Boolean)
-    @Directive('@shareable')
-    hasPreviousPage!: boolean;
-}
-
-@ObjectType('OffsetPaging')
-@Directive('@shareable')
-export class OffsetPaging {
-    @Field(() => Int, { nullable: true })
-    @Directive('@shareable')
-    limit?: number;
-
-    @Field(() => Int, { nullable: true })
-    @Directive('@shareable')
-    offset?: number;
-}
-
-export function createPaginatedType<T>(ItemType: Type<T>) {
-    @ObjectType({ isAbstract: true })
-    @Directive('@shareable')
-    abstract class PaginatedResponse {
-        @Field(() => [ItemType])
-        @Directive('@shareable')
-        nodes!: T[];
-
-        @Field(() => PageInfo)
-        @Directive('@shareable')
-        pageInfo!: PageInfo;
-
-        @Field(() => Int)
-        @Directive('@shareable')
-        totalCount!: number;
-    }
-    return PaginatedResponse;
+    @Directive('@extendable')
+    hasPreviousPage: boolean;
 }

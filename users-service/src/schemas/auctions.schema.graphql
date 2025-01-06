@@ -77,11 +77,6 @@ input OffsetPaging {
   offset: Int
 }
 
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
 type Query {
   user(
     """The id of the record to find."""

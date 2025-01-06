@@ -2,7 +2,6 @@ import { Directive, Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { FreightHandlingDto, FreightHandlingItem } from './freight-handling.dto';
 import { FilterableField, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions, UnPagedRelation } from '@nestjs-query/query-graphql';
 import { BidDto } from './bid.dto';
-import { createPaginatedType } from 'src/common/offset-page-info';
 
 @InputType('CreateAuctionInput')
 export class AuctionDto {
@@ -50,7 +49,3 @@ export class AuctionItemDto {
     @FilterableField()
     createdAt!: Date;
 }
-
-@ObjectType('PaginatedAuctions')
-@Directive('@shareable')
-export class PaginatedAuctionsResponse extends createPaginatedType(AuctionItemDto) {}

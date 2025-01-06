@@ -83,7 +83,6 @@ import { AuctionResolver } from './auctions/auctions.resolver';
     controllers: [AppController],
     providers: [AuctionsService, AuctionsTimerService, AuctionsTimerProcessor, AuctionResolver],
 })
-
 export class AppModule {
     constructor(private dataSource: DataSource) {
     }
