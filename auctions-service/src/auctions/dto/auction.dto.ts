@@ -28,7 +28,7 @@ export class AuctionDto {
 @FilterableUnPagedRelation('unloadings', () => FreightHandlingItem, { disableRemove: true, disableUpdate: true })
 @ObjectType("AuctionItemDto")
 @Directive('@key(fields: "id")')
-@Directive('@shareable')
+@QueryOptions({ pagingStrategy: PagingStrategies.OFFSET })
 export class AuctionItemDto {
     @IDField(() => ID)
     id!: string;

@@ -67,7 +67,6 @@ import { AuctionResolver } from './auctions/auctions.resolver';
                 UpdateDTOClass: AuctionDto,
                 ServiceClass: AuctionsService,
                 enableTotalCount: true,
-                pagingStrategy: PagingStrategies.OFFSET,
                 enableAggregate: true,
                 read: {
                     one: { name: 'auction' },

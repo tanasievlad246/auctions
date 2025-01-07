@@ -61,7 +61,6 @@ import { AppService } from './app.service';
         UpdateDTOClass: CreateUserDto,
         ServiceClass: UserService,
         enableTotalCount: true,
-        pagingStrategy: PagingStrategies.OFFSET,
         read: {
           one: { name: 'user' },
           many: { name: 'users' }

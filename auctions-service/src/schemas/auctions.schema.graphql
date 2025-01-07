@@ -162,14 +162,6 @@ type AuctionItemDtoCountAggregate {
   title: Int
 }
 
-type AuctionItemDtoEdge {
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-
-  """The node containing the AuctionItemDto"""
-  node: AuctionItemDto!
-}
-
 input AuctionItemDtoFilter {
   and: [AuctionItemDtoFilter!]
   createdAt: DateFieldComparison
@@ -420,9 +412,6 @@ enum BidDtoSortFields {
   startDate
 }
 
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
-
 input CreateAuctionInput {
   createdBy: String!
   description: String!
@@ -601,20 +590,6 @@ input OffsetPaging {
 
   """Offset to start returning records from"""
   offset: Int
-}
-
-type PageInfo {
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
-
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
 }
 
 type Query {

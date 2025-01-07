@@ -1,9 +1,9 @@
-import { FilterableField } from "@nestjs-query/query-graphql";
+import { FilterableField, PagingStrategies, QueryOptions } from "@nestjs-query/query-graphql";
 import { Directive, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 @Directive('@key(fields: "id")')
-@Directive('@shareable')
+@QueryOptions({ pagingStrategy: PagingStrategies.NONE })
 export class UserDto {
     @FilterableField(() => ID)
     id: string;
