@@ -21,6 +21,7 @@ import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
           subgraphHealthCheck: true,
           logger: console,
         }),
+        debug: process.env.NODE_ENV !== 'production',
       },
     }),
   ],
