@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { isAuthenticated, auth0Client } from '@/store';
-	import { loginWithRedirect, getUser, logout } from '@/auth/auth.service';
-	import { onMount } from 'svelte';
+	import { isAuthenticated, auth0Client, loading, user } from '@/store';
+	import { loginWithRedirect, logout } from '@/auth/auth.service';
 
-    onMount(async () => {
-        const user = await getUser($auth0Client);
+    user.subscribe((user) => {
         console.log(user);
     })
 </script>
@@ -15,16 +13,20 @@
 	<div class="flex flex-row">
 		<a href="/" class="text-2xl font-bold">Auctions</a>
 	</div>
-	{#if $isAuthenticated}
-		<div class="flex flex-row items-center">
-			<a href="/auctions" class="px-2">Auctions</a>
-			<a href="/auctions/new" class="px-2">New Auction</a>
-		</div>
-	{/if}
-	{#if !$isAuthenticated}
-		<div class="flex flex-row items-center">
-			<button on:click={() => loginWithRedirect($auth0Client, {})} class="px-2">Login</button>
-			<button on:click={() => logout($auth0Client)} class="px-2">Register</button>
-		</div>
-	{/if}
+    {#if $loading}
+        <div>Loading...</div>
+    {:else}
+        {#if $isAuthenticated}
+            <div class="flex flex-row items-center">
+                <a href="/auctions" class="px-2">Auctions</a>
+                <a href="/auctions/new" class="px-2">New Auction</a>
+                <button on:click={() => logout($auth0Client)} class="px-2">Logout</button>
+            </div>
+        {/if}
+        {#if !$isAuthenticated}
+            <div class="flex flex-row items-center">
+                <button on:click={() => loginWithRedirect($auth0Client, {})} class="px-2">Login</button>
+            </div>
+        {/if}
+    {/if}
 </div>
