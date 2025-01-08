@@ -1,4 +1,4 @@
-import { FilterableField, PagingStrategies, QueryOptions } from "@nestjs-query/query-graphql";
+import { FilterableField, PagingStrategies, QueryOptions } from "@ptc-org/nestjs-query-graphql";
 import { Directive, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()

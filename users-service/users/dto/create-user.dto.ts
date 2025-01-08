@@ -1,4 +1,4 @@
-import { FilterableField } from "@nestjs-query/query-graphql";
+import { FilterableField } from "@ptc-org/nestjs-query-graphql";
 import { Directive, InputType } from "@nestjs/graphql";
 
 @InputType()

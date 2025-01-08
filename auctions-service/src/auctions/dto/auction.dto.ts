@@ -1,6 +1,6 @@
 import { Directive, Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { FreightHandlingDto, FreightHandlingItem } from './freight-handling.dto';
-import { FilterableField, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions, UnPagedRelation } from '@nestjs-query/query-graphql';
+import { FilterableField, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions, UnPagedRelation } from '@ptc-org/nestjs-query-graphql'
 import { BidDto } from './bid.dto';
 
 @InputType('CreateAuctionInput')
@@ -23,9 +23,9 @@ export class AuctionDto {
     createdBy: string;
 }
 
-@UnPagedRelation('bids', () => BidDto, { disableRemove: true, disableUpdate: true })
-@FilterableUnPagedRelation('loadings', () => FreightHandlingItem, { disableRemove: true, disableUpdate: true })
-@FilterableUnPagedRelation('unloadings', () => FreightHandlingItem, { disableRemove: true, disableUpdate: true })
+@UnPagedRelation('bids', () => BidDto)
+@FilterableUnPagedRelation('loadings', () => FreightHandlingItem)
+@FilterableUnPagedRelation('unloadings', () => FreightHandlingItem)
 @ObjectType("AuctionItemDto")
 @Directive('@key(fields: "id")')
 @QueryOptions({ pagingStrategy: PagingStrategies.OFFSET })

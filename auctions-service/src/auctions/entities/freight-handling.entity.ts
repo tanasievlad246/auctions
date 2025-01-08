@@ -1,8 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Auction } from "./auction.entity";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Relation } from "@nestjs-query/query-graphql";
-import { AuctionItemDto } from "../dto/auction.dto";
 
 @ObjectType()
 @Entity({

@@ -3,8 +3,8 @@ import { AuctionDto, AuctionItemDto } from './dto/auction.dto';
 import { Auction } from './entities/auction.entity';
 import { AuctionsService } from './auctions.service';
 import { Inject } from '@nestjs/common';
-import { QueryArgsType } from '@nestjs-query/query-graphql';
-import { InjectQueryService, QueryService } from '@nestjs-query/core';
+import { QueryArgsType } from '@ptc-org/nestjs-query-graphql';
+import { InjectQueryService, QueryService } from '@ptc-org/nestjs-query-core';
 import { Bid } from './entities/bid.entity';
 import { CreateBidDto } from './dto/bid.dto';
 

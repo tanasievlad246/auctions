@@ -3,7 +3,7 @@ import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Injectable } from "@nestjs/common";
-import { TypeOrmQueryService } from "@nestjs-query/query-typeorm";
+import { TypeOrmQueryService } from "@ptc-org/nestjs-query-typeorm";
 
 @Injectable()
 export class UserService extends TypeOrmQueryService<User> {

@@ -54,20 +54,38 @@ input AuctionItemDtoAggregateFilter {
   description: StringFieldComparison
   endDate: DateFieldComparison
   id: IDFilterComparison
+  loadings: AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter
   or: [AuctionItemDtoAggregateFilter!]
   startDate: DateFieldComparison
   startingPrice: NumberFieldComparison
   status: StringFieldComparison
   title: StringFieldComparison
+  unloadings: AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter
+}
+
+input AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter {
+  address: StringFieldComparison
+  and: [AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter!]
+  city: StringFieldComparison
+  contactEmail: StringFieldComparison
+  contactPerson: StringFieldComparison
+  contactPhone: StringFieldComparison
+  country: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter!]
+  startDate: DateFieldComparison
+  zipCode: StringFieldComparison
 }
 
 type AuctionItemDtoAggregateGroupBy {
-  createdAt: DateTime
+  createdAt(by: GroupBy! = DAY): DateTime
   createdBy: String
   description: String
-  endDate: DateTime
+  endDate(by: GroupBy! = DAY): DateTime
   id: ID
-  startDate: DateTime
+  startDate(by: GroupBy! = DAY): DateTime
   startingPrice: Float
   status: String
   title: String
@@ -534,6 +552,14 @@ enum FreightHandlingItemSortFields {
   zipCode
 }
 
+"""Group by"""
+enum GroupBy {
+  DAY
+  MONTH
+  WEEK
+  YEAR
+}
+
 input IDFilterComparison {
   eq: ID
   gt: ID
@@ -596,7 +622,7 @@ type Query {
   auction(
     """The id of the record to find."""
     id: ID!
-  ): AuctionItemDto
+  ): AuctionItemDto!
   auctionItemDtoAggregate(
     """Filter to find records to aggregate on"""
     filter: AuctionItemDtoAggregateFilter

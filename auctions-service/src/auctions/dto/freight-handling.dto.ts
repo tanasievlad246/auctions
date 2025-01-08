@@ -1,6 +1,6 @@
 import { Directive, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { Auction } from "../entities/auction.entity";
-import { FilterableField, Relation } from "@nestjs-query/query-graphql";
+import { FilterableField, Relation } from "@ptc-org/nestjs-query-graphql";
 
 @InputType('FreightHandlingInput')
 export class FreightHandlingDto {

@@ -13,9 +13,9 @@ import { AuctionsTimerProcessor } from './auctions/auctions-timer/auctions-timer
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
-import { NestjsQueryGraphQLModule, PagingStrategies } from '@nestjs-query/query-graphql';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
 import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
-import { NestjsQueryTypeOrmModule } from '@nestjs-query/query-typeorm';
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
 import { AuctionResolver } from './auctions/auctions.resolver';
 
 @Module({
