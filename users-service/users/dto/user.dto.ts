@@ -3,7 +3,7 @@ import { Directive, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 @Directive('@key(fields: "id")')
-@QueryOptions({ pagingStrategy: PagingStrategies.NONE })
+@QueryOptions({ pagingStrategy: PagingStrategies.OFFSET })
 export class UserDto {
     @FilterableField(() => ID)
     id: string;

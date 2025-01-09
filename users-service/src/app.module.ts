@@ -25,7 +25,7 @@ import { AppService } from './app.service';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'transport_auctions',
       schema: process.env.DB_SCHEMA || 'transport_auctions_users',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
     }),
@@ -61,6 +61,7 @@ import { AppService } from './app.service';
         UpdateDTOClass: CreateUserDto,
         ServiceClass: UserService,
         enableTotalCount: true,
+        enableAggregate: true,
         read: {
           one: { name: 'user' },
           many: { name: 'users' }
