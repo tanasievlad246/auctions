@@ -1,0 +1,27 @@
+{
+  "name": "@hermestms/gateway-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "gateway-e2e",
+    "projectType": "application",
+    "implicitDependencies": [
+      "gateway"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/{e2eProjectRoot}"
+        ],
+        "options": {
+          "jestConfig": "services/gateway-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "gateway:build"
+        ]
+      }
+    }
+  }
+}
