@@ -37,6 +37,7 @@ USER nodejs
 # Copy needed files from installer
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=installer /app/package.json ./package.json
+COPY --from=installer /app/packages ./packages
 COPY --from=installer /app/apps/services/auctions/dist ./apps/services/auctions/dist
 
 # Expose the port your auctions service uses
