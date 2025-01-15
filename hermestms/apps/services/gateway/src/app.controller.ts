@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { log } from '@hermestms/logger';
 
 @Controller()
 export class AppController {
@@ -7,6 +8,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
+    log('getHello called');
     return this.appService.getHello();
   }
 }
