@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
 
 FROM base AS builder
 # Add libc6-compat for Alpine
@@ -40,7 +40,7 @@ COPY --from=installer /app/package.json ./package.json
 COPY --from=installer /app/apps/services/auctions/dist ./apps/services/auctions/dist
 
 # Expose the port your auctions service uses
-EXPOSE 3000
+EXPOSE 3001
 
 # Modified to point to the auctions service's entry point
 CMD node apps/services/auctions/dist/main.js

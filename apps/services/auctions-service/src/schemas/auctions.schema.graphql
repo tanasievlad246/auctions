@@ -1,0 +1,669 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuctionItemDto {
+  bids(
+    """Specify to filter the records returned."""
+    filter: BidDtoFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [BidDtoSort!]! = []
+  ): [BidDto!]!
+  bidsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: BidDtoAggregateFilter
+  ): [AuctionItemDtoBidsAggregateResponse!]!
+  createdAt: DateTime!
+  createdBy: String!
+  description: String!
+  endDate: DateTime!
+  id: ID!
+  loadings(
+    """Specify to filter the records returned."""
+    filter: FreightHandlingItemFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [FreightHandlingItemSort!]! = []
+  ): [FreightHandlingItem!]!
+  loadingsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: FreightHandlingItemAggregateFilter
+  ): [AuctionItemDtoLoadingsAggregateResponse!]!
+  startDate: DateTime!
+  startingPrice: Float!
+  status: String!
+  title: String!
+  unloadings(
+    """Specify to filter the records returned."""
+    filter: FreightHandlingItemFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [FreightHandlingItemSort!]! = []
+  ): [FreightHandlingItem!]!
+  unloadingsAggregate(
+    """Filter to find records to aggregate on"""
+    filter: FreightHandlingItemAggregateFilter
+  ): [AuctionItemDtoUnloadingsAggregateResponse!]!
+}
+
+input AuctionItemDtoAggregateFilter {
+  and: [AuctionItemDtoAggregateFilter!]
+  createdAt: DateFieldComparison
+  createdBy: StringFieldComparison
+  description: StringFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  loadings: AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter
+  or: [AuctionItemDtoAggregateFilter!]
+  startDate: DateFieldComparison
+  startingPrice: NumberFieldComparison
+  status: StringFieldComparison
+  title: StringFieldComparison
+  unloadings: AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter
+}
+
+input AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter {
+  address: StringFieldComparison
+  and: [AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter!]
+  city: StringFieldComparison
+  contactEmail: StringFieldComparison
+  contactPerson: StringFieldComparison
+  contactPhone: StringFieldComparison
+  country: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [AuctionItemDtoAggregateFilterFreightHandlingItemAggregateFilter!]
+  startDate: DateFieldComparison
+  zipCode: StringFieldComparison
+}
+
+type AuctionItemDtoAggregateGroupBy {
+  createdAt(by: GroupBy! = DAY): DateTime
+  createdBy: String
+  description: String
+  endDate(by: GroupBy! = DAY): DateTime
+  id: ID
+  startDate(by: GroupBy! = DAY): DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+type AuctionItemDtoAggregateResponse {
+  avg: AuctionItemDtoAvgAggregate
+  count: AuctionItemDtoCountAggregate
+  groupBy: AuctionItemDtoAggregateGroupBy
+  max: AuctionItemDtoMaxAggregate
+  min: AuctionItemDtoMinAggregate
+  sum: AuctionItemDtoSumAggregate
+}
+
+type AuctionItemDtoAvgAggregate {
+  startingPrice: Float
+}
+
+type AuctionItemDtoBidsAggregateGroupBy {
+  amount: Float
+  bidder: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+}
+
+type AuctionItemDtoBidsAggregateResponse {
+  avg: AuctionItemDtoBidsAvgAggregate
+  count: AuctionItemDtoBidsCountAggregate
+  groupBy: AuctionItemDtoBidsAggregateGroupBy
+  max: AuctionItemDtoBidsMaxAggregate
+  min: AuctionItemDtoBidsMinAggregate
+  sum: AuctionItemDtoBidsSumAggregate
+}
+
+type AuctionItemDtoBidsAvgAggregate {
+  amount: Float
+}
+
+type AuctionItemDtoBidsCountAggregate {
+  amount: Int
+  bidder: Int
+  createdAt: Int
+  endDate: Int
+  id: Int
+  startDate: Int
+}
+
+type AuctionItemDtoBidsMaxAggregate {
+  amount: Float
+  bidder: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+}
+
+type AuctionItemDtoBidsMinAggregate {
+  amount: Float
+  bidder: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+}
+
+type AuctionItemDtoBidsSumAggregate {
+  amount: Float
+}
+
+type AuctionItemDtoConnection {
+  """Array of nodes."""
+  nodes: [AuctionItemDto!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type AuctionItemDtoCountAggregate {
+  createdAt: Int
+  createdBy: Int
+  description: Int
+  endDate: Int
+  id: Int
+  startDate: Int
+  startingPrice: Int
+  status: Int
+  title: Int
+}
+
+input AuctionItemDtoFilter {
+  and: [AuctionItemDtoFilter!]
+  createdAt: DateFieldComparison
+  createdBy: StringFieldComparison
+  description: StringFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  loadings: AuctionItemDtoFilterFreightHandlingItemFilter
+  or: [AuctionItemDtoFilter!]
+  startDate: DateFieldComparison
+  startingPrice: NumberFieldComparison
+  status: StringFieldComparison
+  title: StringFieldComparison
+  unloadings: AuctionItemDtoFilterFreightHandlingItemFilter
+}
+
+input AuctionItemDtoFilterFreightHandlingItemFilter {
+  address: StringFieldComparison
+  and: [AuctionItemDtoFilterFreightHandlingItemFilter!]
+  city: StringFieldComparison
+  contactEmail: StringFieldComparison
+  contactPerson: StringFieldComparison
+  contactPhone: StringFieldComparison
+  country: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [AuctionItemDtoFilterFreightHandlingItemFilter!]
+  startDate: DateFieldComparison
+  zipCode: StringFieldComparison
+}
+
+type AuctionItemDtoLoadingsAggregateGroupBy {
+  address: String
+  city: String
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+  country: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  zipCode: String
+}
+
+type AuctionItemDtoLoadingsAggregateResponse {
+  count: AuctionItemDtoLoadingsCountAggregate
+  groupBy: AuctionItemDtoLoadingsAggregateGroupBy
+  max: AuctionItemDtoLoadingsMaxAggregate
+  min: AuctionItemDtoLoadingsMinAggregate
+}
+
+type AuctionItemDtoLoadingsCountAggregate {
+  address: Int
+  city: Int
+  contactEmail: Int
+  contactPerson: Int
+  contactPhone: Int
+  country: Int
+  createdAt: Int
+  endDate: Int
+  id: Int
+  startDate: Int
+  zipCode: Int
+}
+
+type AuctionItemDtoLoadingsMaxAggregate {
+  address: String
+  city: String
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+  country: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  zipCode: String
+}
+
+type AuctionItemDtoLoadingsMinAggregate {
+  address: String
+  city: String
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+  country: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  zipCode: String
+}
+
+type AuctionItemDtoMaxAggregate {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+type AuctionItemDtoMinAggregate {
+  createdAt: DateTime
+  createdBy: String
+  description: String
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  startingPrice: Float
+  status: String
+  title: String
+}
+
+input AuctionItemDtoSort {
+  direction: SortDirection!
+  field: AuctionItemDtoSortFields!
+  nulls: SortNulls
+}
+
+enum AuctionItemDtoSortFields {
+  createdAt
+  createdBy
+  description
+  endDate
+  id
+  startDate
+  startingPrice
+  status
+  title
+}
+
+type AuctionItemDtoSumAggregate {
+  startingPrice: Float
+}
+
+type AuctionItemDtoUnloadingsAggregateGroupBy {
+  address: String
+  city: String
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+  country: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  zipCode: String
+}
+
+type AuctionItemDtoUnloadingsAggregateResponse {
+  count: AuctionItemDtoUnloadingsCountAggregate
+  groupBy: AuctionItemDtoUnloadingsAggregateGroupBy
+  max: AuctionItemDtoUnloadingsMaxAggregate
+  min: AuctionItemDtoUnloadingsMinAggregate
+}
+
+type AuctionItemDtoUnloadingsCountAggregate {
+  address: Int
+  city: Int
+  contactEmail: Int
+  contactPerson: Int
+  contactPhone: Int
+  country: Int
+  createdAt: Int
+  endDate: Int
+  id: Int
+  startDate: Int
+  zipCode: Int
+}
+
+type AuctionItemDtoUnloadingsMaxAggregate {
+  address: String
+  city: String
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+  country: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  zipCode: String
+}
+
+type AuctionItemDtoUnloadingsMinAggregate {
+  address: String
+  city: String
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+  country: String
+  createdAt: DateTime
+  endDate: DateTime
+  id: ID
+  startDate: DateTime
+  zipCode: String
+}
+
+type BidDto {
+  amount: Float!
+  bidder: String!
+  createdAt: DateTime!
+  endDate: DateTime!
+  id: ID!
+  startDate: DateTime!
+}
+
+input BidDtoAggregateFilter {
+  amount: NumberFieldComparison
+  and: [BidDtoAggregateFilter!]
+  bidder: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [BidDtoAggregateFilter!]
+  startDate: DateFieldComparison
+}
+
+input BidDtoFilter {
+  amount: NumberFieldComparison
+  and: [BidDtoFilter!]
+  bidder: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [BidDtoFilter!]
+  startDate: DateFieldComparison
+}
+
+input BidDtoSort {
+  direction: SortDirection!
+  field: BidDtoSortFields!
+  nulls: SortNulls
+}
+
+enum BidDtoSortFields {
+  amount
+  bidder
+  createdAt
+  endDate
+  id
+  startDate
+}
+
+input CreateAuctionInput {
+  createdBy: String!
+  description: String!
+  endDate: DateTime!
+  loadings: [FreightHandlingInput!]!
+  startDate: DateTime!
+  startingPrice: Float!
+  title: String!
+  unloadings: [FreightHandlingInput!]!
+}
+
+input CreateBidInput {
+  amount: Float!
+  auctionId: String!
+  bidder: String!
+  endDate: DateTime!
+  startDate: DateTime!
+}
+
+input DateFieldComparison {
+  between: DateFieldComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  is: Boolean
+  isNot: Boolean
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+  notBetween: DateFieldComparisonBetween
+  notIn: [DateTime!]
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input FreightHandlingInput {
+  address: String!
+  city: String!
+  contactEmail: String!
+  contactPerson: String!
+  contactPhone: String!
+  country: String!
+  endDate: DateTime!
+  startDate: DateTime!
+  zipCode: String!
+}
+
+type FreightHandlingItem {
+  address: String!
+  city: String!
+  contactEmail: String!
+  contactPerson: String!
+  contactPhone: String!
+  country: String!
+  createdAt: DateTime!
+  endDate: DateTime!
+  id: ID!
+  startDate: DateTime!
+  zipCode: String!
+}
+
+input FreightHandlingItemAggregateFilter {
+  address: StringFieldComparison
+  and: [FreightHandlingItemAggregateFilter!]
+  city: StringFieldComparison
+  contactEmail: StringFieldComparison
+  contactPerson: StringFieldComparison
+  contactPhone: StringFieldComparison
+  country: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [FreightHandlingItemAggregateFilter!]
+  startDate: DateFieldComparison
+  zipCode: StringFieldComparison
+}
+
+input FreightHandlingItemFilter {
+  address: StringFieldComparison
+  and: [FreightHandlingItemFilter!]
+  city: StringFieldComparison
+  contactEmail: StringFieldComparison
+  contactPerson: StringFieldComparison
+  contactPhone: StringFieldComparison
+  country: StringFieldComparison
+  createdAt: DateFieldComparison
+  endDate: DateFieldComparison
+  id: IDFilterComparison
+  or: [FreightHandlingItemFilter!]
+  startDate: DateFieldComparison
+  zipCode: StringFieldComparison
+}
+
+input FreightHandlingItemSort {
+  direction: SortDirection!
+  field: FreightHandlingItemSortFields!
+  nulls: SortNulls
+}
+
+enum FreightHandlingItemSortFields {
+  address
+  city
+  contactEmail
+  contactPerson
+  contactPhone
+  country
+  createdAt
+  endDate
+  id
+  startDate
+  zipCode
+}
+
+"""Group by"""
+enum GroupBy {
+  DAY
+  MONTH
+  WEEK
+  YEAR
+}
+
+input IDFilterComparison {
+  eq: ID
+  gt: ID
+  gte: ID
+  iLike: ID
+  in: [ID!]
+  is: Boolean
+  isNot: Boolean
+  like: ID
+  lt: ID
+  lte: ID
+  neq: ID
+  notILike: ID
+  notIn: [ID!]
+  notLike: ID
+}
+
+type Mutation {
+  bidOnAuction(input: CreateBidInput!): AuctionItemDto!
+  createAuction(input: CreateAuctionInput!): AuctionItemDto!
+}
+
+input NumberFieldComparison {
+  between: NumberFieldComparisonBetween
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: Boolean
+  isNot: Boolean
+  lt: Float
+  lte: Float
+  neq: Float
+  notBetween: NumberFieldComparisonBetween
+  notIn: [Float!]
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+type OffsetPageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+}
+
+input OffsetPaging {
+  """Limit the number of records returned"""
+  limit: Int
+
+  """Offset to start returning records from"""
+  offset: Int
+}
+
+type Query {
+  auction(
+    """The id of the record to find."""
+    id: ID!
+  ): AuctionItemDto!
+  auctionItemDtoAggregate(
+    """Filter to find records to aggregate on"""
+    filter: AuctionItemDtoAggregateFilter
+  ): [AuctionItemDtoAggregateResponse!]!
+  auctions(
+    """Specify to filter the records returned."""
+    filter: AuctionItemDtoFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [AuctionItemDtoSort!]! = []
+  ): AuctionItemDtoConnection!
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input StringFieldComparison {
+  eq: String
+  gt: String
+  gte: String
+  iLike: String
+  in: [String!]
+  is: Boolean
+  isNot: Boolean
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  notILike: String
+  notIn: [String!]
+  notLike: String
+}
