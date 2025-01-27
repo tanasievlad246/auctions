@@ -1,29 +1,41 @@
-version: "3"
-
 services:
-  web:
-    container_name: web
+  gateway:
+    container_name: gateway
     build:
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: ./apps/services/gateway/Dockerfile
     restart: always
     ports:
       - 3000:3000
     networks:
       - app_network
-  api:
-    container_name: api
+    depends_on:
+      # users-service:
+      #   condition: service_healthy
+      auctions:
+        condition: service_healthy
+
+  auctions:
+    container_name: auctions
     build:
       context: .
-      dockerfile: ./apps/api/Dockerfile
+      dockerfile: ./apps/services/auctions/Dockerfile
     restart: always
+    env_file: ./apps/services/auctions/.env
+    environment:
+      - PORT=3001
     ports:
       - 3001:3001
     networks:
       - app_network
-
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/app/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
 networks:
   app_network:
-    external: true
+    driver: bridge
