@@ -22,6 +22,9 @@ services:
       dockerfile: ./apps/services/auctions/Dockerfile
     restart: always
     env_file: ./apps/services/auctions/.env
+    depends_on:
+      - postgres
+      - redis
     environment:
       - PORT=3001
     ports:
@@ -34,8 +37,35 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
+
+  postgres:
+    image: postgres:15
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=transport_auctions
+    networks:
+      - backend
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./data/redis:/data
+      - ./redis/create-queues.sh:/docker-entrypoint-initdb.d/create-queues.sh
+    command: ["/bin/bash", "-c", "redis-server --appendonly yes & sleep 5 && /docker-entrypoint-initdb.d/create-queues.sh && wait"]
+    networks:
+      - backend
+
 networks:
+  backend:
+    driver: bridge
   app_network:
     driver: bridge

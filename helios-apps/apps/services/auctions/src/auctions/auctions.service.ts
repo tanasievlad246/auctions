@@ -1,4 +1,4 @@
-import { HttpCode, HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, MoreThan, Repository } from 'typeorm';
 import { FreightHandling } from './entities/freight-handling.entity';
@@ -24,7 +24,7 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
         @InjectQueue('auctions') private readonly auctionsQueue: Queue,
     ) {
         super(auctionRepository);
-     }
+    }
 
     public async getAuctions(): Promise<Auction[]> {
         return this.auctionRepository.find({
@@ -181,7 +181,17 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
     public setWinnigBidAndCloseAuction(auctionId: string, bidId: string): Promise<Auction> {
         return this.dataSource.transaction(async (manager) => {
             const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
+
+            if (!auction) {
+                throw new HttpException('Auction not found', 404);
+            }
+
             const bid = await manager.findOneBy<Bid>(Bid, { id: bidId });
+
+            if (!bid) {
+                throw new HttpException('Bid not found', 404);
+            }
+
             auction.status = AuctionStatus.CLOSED;
             auction.winningBid = bid;
             return await manager.save(Auction, auction);
@@ -191,6 +201,11 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
     public async closeAuction(auctionId: string): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
             const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
+
+            if (!auction) {
+                throw new HttpException('Auction not found', 404);
+            }
+
             auction.status = AuctionStatus.CLOSED;
             return await manager.save(Auction, auction);
         });
@@ -199,6 +214,11 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
     public async startAuction(auctionId: string): Promise<Auction> {
         return await this.dataSource.transaction(async (manager) => {
             const auction = await manager.findOneBy<Auction>(Auction, { id: auctionId });
+
+            if (!auction) {
+                throw new HttpException('Auction not found', 404);
+            }
+
             auction.status = AuctionStatus.OPEN;
             return await manager.save(Auction, auction);
         });

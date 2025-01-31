@@ -20,11 +20,29 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "@apollo/subgraph": "^2.9.3",
+    "@nestjs/apollo": "^13.0.2",
+    "@nestjs/bullmq": "^11.0.1",
     "@nestjs/common": "^11.0.6",
+    "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.6",
+    "@nestjs/graphql": "^13.0.2",
     "@nestjs/platform-express": "^11.0.6",
+    "@nestjs/typeorm": "^11.0.0",
+    "@ptc-org/nestjs-query-core": "^8.0.3",
+    "@ptc-org/nestjs-query-graphql": "^8.0.3",
+    "@ptc-org/nestjs-query-typeorm": "^8.0.3",
+    "bullmq": "^5.39.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "dataloader": "^2.2.3",
+    "graphql": "^16.10.0",
+    "graphql-subscriptions": "^3.0.0",
+    "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
