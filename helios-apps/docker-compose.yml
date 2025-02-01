@@ -10,8 +10,8 @@ services:
     networks:
       - app_network
     depends_on:
-      # users-service:
-      #   condition: service_healthy
+      users:
+        condition: service_healthy
       auctions:
         condition: service_healthy
 
@@ -31,8 +31,33 @@ services:
       - 3001:3001
     networks:
       - app_network
+      - backend
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/app/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  users:
+    container_name: users
+    build:
+      context: .
+      dockerfile: ./apps/services/users/Dockerfile
+    restart: always
+    env_file: ./apps/services/users/.env
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - PORT=3002
+    ports:
+      - 3002:3002
+    networks:
+      - app_network
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/app/heartbeat"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -54,6 +79,7 @@ services:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   redis:
+    container_name: redis
     image: redis:7
     ports:
       - '6379:6379'

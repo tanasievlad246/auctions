@@ -6,12 +6,11 @@ RUN apk update
 RUN apk add --no-cache libc6-compat
 # Set working directory
 WORKDIR /app
-
 # Install pnpm and turbo
 RUN npm install -g pnpm turbo
 COPY . .
-# Modified to target the auctions service
-RUN turbo prune @helios-apps/auctions --docker
+# Modified to target the users service
+RUN turbo prune @helios-apps/users --docker
 
 FROM base AS installer
 RUN apk update
@@ -37,7 +36,7 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
 # Build the project
-RUN pnpm turbo build --filter=@helios-apps/auctions
+RUN pnpm turbo build --filter=@helios-apps/users
 
 FROM base AS runner
 WORKDIR /app
@@ -46,12 +45,12 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
 # Copy the entire node_modules tree
 COPY --from=installer --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=installer --chown=nodejs:nodejs /app/apps/services/auctions/node_modules ./apps/services/auctions/node_modules
+COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/node_modules ./apps/services/users/node_modules
 COPY --from=installer --chown=nodejs:nodejs /app/package.json ./package.json
-COPY --from=installer --chown=nodejs:nodejs /app/apps/services/auctions/dist ./apps/services/auctions/dist
+COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/dist ./apps/services/users/dist
 
 USER nodejs
-# Expose the port your auctions service uses
-EXPOSE 3001
-# Modified to point to the auctions service's entry point
-CMD node apps/services/auctions/dist/main.js
+# Expose the port your users service uses
+EXPOSE 3002
+# Modified to point to the users service's entry point
+CMD node apps/services/users/dist/main.js
