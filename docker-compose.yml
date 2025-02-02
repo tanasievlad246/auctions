@@ -4,9 +4,12 @@ services:
     build:
       context: .
       dockerfile: ./apps/services/gateway/Dockerfile
+      target: development
     restart: always
     ports:
       - 3000:3000
+    volumes:
+      - ./apps/services/gateway:/app/apps/services/gateway
     networks:
       - app_network
     depends_on:
@@ -20,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/services/auctions/Dockerfile
+      target: development
     restart: always
     env_file: ./apps/services/auctions/.env
     depends_on:
@@ -32,6 +36,8 @@ services:
     networks:
       - app_network
       - backend
+    volumes:
+      - ./apps/services/auctions:/app/apps/services/auctions
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/app/heartbeat"]
       interval: 10s
@@ -44,6 +50,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/services/users/Dockerfile
+      target: development
     restart: always
     env_file: ./apps/services/users/.env
     depends_on:
@@ -56,6 +63,8 @@ services:
     networks:
       - app_network
       - backend
+    volumes:
+      - ./apps/services/users:/app/apps/services/users
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/app/heartbeat"]
       interval: 10s
