@@ -10,3 +10,4 @@ data/
 .next
 dist
 build
+.turbo

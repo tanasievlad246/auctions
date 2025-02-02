@@ -4,6 +4,7 @@
 **/.svelte-kit
 ./data
 data/
+.turbo
 
 # Output
 .output

@@ -1,0 +1,22 @@
+{
+    "extends": "@repo/typescript-config/base.json",
+    "compilerOptions": {
+        "lib": [
+            "ES2015",
+            "DOM"
+        ],
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "types": [
+            "jest",
+            "node"
+        ],
+        "experimentalDecorators": true
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
