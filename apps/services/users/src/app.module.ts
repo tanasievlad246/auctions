@@ -13,6 +13,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { join } from 'path';
 
+console.log(process.env)
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -23,7 +25,7 @@ import { join } from 'path';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'transport_auctions',
       schema: process.env.DB_SCHEMA || 'transport_auctions_users',
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
     }),
@@ -41,7 +43,7 @@ import { join } from 'path';
       driver: ApolloFederationDriver,
       playground: process.env.NODE_ENV !== 'production',
       autoSchemaFile: {
-        path: join(process.cwd(), 'apps/services/users/src/schemas/users.schema.graphql'),
+        path: join(process.cwd(), 'src/schemas/users.schema.graphql'),
         federation: 2,
       },
       sortSchema: true,

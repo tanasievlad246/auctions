@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:20-alpine AS base
 
 FROM base AS builder
 # Add libc6-compat for Alpine
@@ -6,6 +6,7 @@ RUN apk update
 RUN apk add --no-cache libc6-compat
 # Set working directory
 WORKDIR /app
+
 # Install pnpm and turbo
 RUN npm install -g pnpm turbo
 COPY . .
@@ -21,9 +22,9 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
 
 # Create schemas directory with correct path and permissions
-# RUN mkdir -p /app/apps/services/auctions/src/schemas && \
-#     chown -R nodejs:nodejs /app/apps/services/auctions/src/schemas && \
-#     chmod 755 /app/apps/services/auctions/src/schemas
+# RUN mkdir -p /app/apps/services/users/src/schemas && \
+#     chown -R nodejs:nodejs /app/apps/services/users/src/schemas && \
+#     chmod 755 /app/apps/services/users/src/schemas
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -51,6 +52,23 @@ COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/dist ./apps
 
 USER nodejs
 # Expose the port your users service uses
-EXPOSE 3002
+EXPOSE 3001
 # Modified to point to the users service's entry point
 CMD node apps/services/users/dist/main.js
+
+FROM base AS development
+WORKDIR /app
+# Install pnpm
+RUN npm install -g pnpm
+# Copy all pruned files
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+# Copy source code
+COPY --from=builder /app/out/full/ .
+# Build the project
+WORKDIR /app/apps/services/users
+EXPOSE 3002
+CMD ["pnpm", "run", "start:dev"]
