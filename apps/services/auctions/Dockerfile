@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:20-alpine AS base
 
 FROM base AS builder
 # Add libc6-compat for Alpine
@@ -55,3 +55,20 @@ USER nodejs
 EXPOSE 3001
 # Modified to point to the auctions service's entry point
 CMD node apps/services/auctions/dist/main.js
+
+FROM base AS development
+WORKDIR /app
+# Install pnpm
+RUN npm install -g pnpm
+# Copy all pruned files
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+# Copy source code
+COPY --from=builder /app/out/full/ .
+# Build the project
+WORKDIR /app/apps/services/auctions
+EXPOSE 3001
+CMD ["pnpm", "run", "start:dev"]

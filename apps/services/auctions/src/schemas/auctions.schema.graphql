@@ -430,25 +430,6 @@ enum BidDtoSortFields {
   startDate
 }
 
-input CreateAuctionInput {
-  createdBy: String!
-  description: String!
-  endDate: DateTime!
-  loadings: [FreightHandlingInput!]!
-  startDate: DateTime!
-  startingPrice: Float!
-  title: String!
-  unloadings: [FreightHandlingInput!]!
-}
-
-input CreateBidInput {
-  amount: Float!
-  auctionId: String!
-  bidder: String!
-  endDate: DateTime!
-  startDate: DateTime!
-}
-
 input DateFieldComparison {
   between: DateFieldComparisonBetween
   eq: DateTime
@@ -473,18 +454,6 @@ input DateFieldComparisonBetween {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-input FreightHandlingInput {
-  address: String!
-  city: String!
-  contactEmail: String!
-  contactPerson: String!
-  contactPhone: String!
-  country: String!
-  endDate: DateTime!
-  startDate: DateTime!
-  zipCode: String!
-}
 
 type FreightHandlingItem {
   address: String!
@@ -575,11 +544,6 @@ input IDFilterComparison {
   notILike: ID
   notIn: [ID!]
   notLike: ID
-}
-
-type Mutation {
-  bidOnAuction(input: CreateBidInput!): AuctionItemDto!
-  createAuction(input: CreateAuctionInput!): AuctionItemDto!
 }
 
 input NumberFieldComparison {

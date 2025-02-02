@@ -14,7 +14,7 @@ import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
 import { AuctionsService } from './auctions/auctions.service';
 import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
-console.log(process.env);
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -46,7 +46,7 @@ console.log(process.env);
       driver: ApolloFederationDriver,
       playground: process.env.NODE_ENV !== 'production',
       autoSchemaFile: {
-        path: join(process.cwd(), 'apps/services/auctions/src/schemas/auctions.schema.graphql'),
+        path: join(process.cwd(), 'src/schemas/auctions.schema.graphql'),
         federation: 2, // Enable Federation 2.0
       },
       sortSchema: true,
