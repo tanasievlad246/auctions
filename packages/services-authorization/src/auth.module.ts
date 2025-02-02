@@ -1,7 +1,7 @@
 import { Module, DynamicModule, Global } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
-import { Auth0Config } from './interfaces/auth0-config.interface';
+import { type Auth0Config } from './interfaces/auth0-config.interface';
 import { AUTH0_CONFIG } from './constants';
 
 @Global()
