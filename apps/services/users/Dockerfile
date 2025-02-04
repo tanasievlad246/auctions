@@ -49,6 +49,7 @@ COPY --from=installer --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/node_modules ./apps/services/users/node_modules
 COPY --from=installer --chown=nodejs:nodejs /app/package.json ./package.json
 COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/dist ./apps/services/users/dist
+COPY --from=builder /app/out/packages/services-authorization ./packages/services-authorization
 
 USER nodejs
 # Expose the port your users service uses
@@ -69,6 +70,8 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
 # Build the project
+
+COPY --from=builder /app/packages/services-authorization ./packages/services-authorization
 WORKDIR /app/apps/services/users
 EXPOSE 3002
 CMD ["pnpm", "run", "start:dev"]

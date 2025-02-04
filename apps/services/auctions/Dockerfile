@@ -68,6 +68,10 @@ COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
+
+# Copy services packages into the service
+COPY --from=builder /app/packages/services-authorization ./packages/services-authorization
+
 # Build the project
 WORKDIR /app/apps/services/auctions
 EXPOSE 3001

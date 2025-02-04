@@ -5,6 +5,7 @@
 ./data
 data/
 .turbo
+.next
 
 # Output
 .output

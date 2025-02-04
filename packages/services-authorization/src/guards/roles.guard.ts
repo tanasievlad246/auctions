@@ -17,7 +17,8 @@ export class RolesGuard implements CanActivate {
         }
 
         const { user } = context.switchToHttp().getRequest();
-        const userRoles = user['https://your-namespace/roles'] || [];
+        console.log(user);
+        const userRoles = user['http://localhost:5173/roles'] || [];
 
         return requiredRoles.some((role) => userRoles.includes(role));
     }

@@ -18,6 +18,22 @@ services:
       auctions:
         condition: service_healthy
 
+  auctions-web:
+    container_name: auctions-web
+    build:
+      context: .
+      dockerfile: ./apps/auctions-web/Dockerfile
+      target: development
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./apps/auctions-web:/app/apps/auctions-web
+    networks:
+      - app_network
+    environment:
+      - GATEWAY_URL=http://gateway:3000
+
   auctions:
     container_name: auctions
     build:
