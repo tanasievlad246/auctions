@@ -25,6 +25,7 @@ services:
       dockerfile: ./apps/auctions-web/Dockerfile
       target: development
     restart: always
+    env_file: ./apps/auctions-web/.env
     ports:
       - 8080:8080
     volumes:
