@@ -12,6 +12,10 @@ import { IntrospectAndCompose } from '@apollo/gateway';
       server: {
         playground: process.env.NODE_ENV !== 'production',
         debug: process.env.NODE_ENV !== 'production',
+        context: ({ req }) => {
+          console.log(req.headers);
+          return { req };
+        },
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
@@ -30,4 +34,4 @@ import { IntrospectAndCompose } from '@apollo/gateway';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

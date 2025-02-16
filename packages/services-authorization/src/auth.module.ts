@@ -3,6 +3,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { type Auth0Config } from './interfaces/auth0-config.interface';
 import { AUTH0_CONFIG } from './constants';
+import { RolesGuard } from './guards/roles.guard';
+import { ClaimsGuard } from './guards/claims.guard';
 
 @Global()
 @Module({})
@@ -19,8 +21,11 @@ export class Auth0Module {
                     useValue: config,
                 },
                 JwtStrategy,
+                RolesGuard,
+                ClaimsGuard,
             ],
-            exports: [JwtStrategy],
+            exports: [JwtStrategy, RolesGuard, ClaimsGuard],
         };
     }
 }
+

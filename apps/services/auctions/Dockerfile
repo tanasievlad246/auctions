@@ -32,8 +32,9 @@ RUN npm install -g pnpm
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=builder /app/packages ./packages
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
 # Build the project
@@ -49,6 +50,7 @@ COPY --from=installer --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=installer --chown=nodejs:nodejs /app/apps/services/auctions/node_modules ./apps/services/auctions/node_modules
 COPY --from=installer --chown=nodejs:nodejs /app/package.json ./package.json
 COPY --from=installer --chown=nodejs:nodejs /app/apps/services/auctions/dist ./apps/services/auctions/dist
+COPY --from=installer --chown=nodejs:nodejs /app/packages ./packages
 
 USER nodejs
 # Expose the port your auctions service uses
@@ -64,10 +66,13 @@ RUN npm install -g pnpm
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=builder /app/packages ./packages
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
+
+RUN pnpm turbo build --filter=@helios-apps/auctions
 
 # Copy services packages into the service
 COPY --from=builder /app/packages/services-authorization ./packages/services-authorization

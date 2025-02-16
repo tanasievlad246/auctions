@@ -32,8 +32,10 @@ RUN npm install -g pnpm
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=builder /app/packages ./packages
+
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
 # Build the project
@@ -50,6 +52,7 @@ COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/node_module
 COPY --from=installer --chown=nodejs:nodejs /app/package.json ./package.json
 COPY --from=installer --chown=nodejs:nodejs /app/apps/services/users/dist ./apps/services/users/dist
 COPY --from=builder /app/out/packages/services-authorization ./packages/services-authorization
+COPY --from=installer --chown=nodejs:nodejs /app/packages ./packages
 
 USER nodejs
 # Expose the port your users service uses
@@ -66,9 +69,10 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
+RUN pnpm turbo build --filter=@helios-apps/users
 # Build the project
 
 COPY --from=builder /app/packages/services-authorization ./packages/services-authorization

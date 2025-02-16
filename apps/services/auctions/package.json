@@ -20,7 +20,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@repo/services-authorization": "workspace:*",
     "@apollo/server": "^4.11.3",
     "@apollo/subgraph": "^2.9.3",
     "@nestjs/apollo": "^13.0.2",
@@ -29,11 +28,13 @@
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.6",
     "@nestjs/graphql": "^13.0.2",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.6",
     "@nestjs/typeorm": "^11.0.0",
     "@ptc-org/nestjs-query-core": "^8.0.3",
     "@ptc-org/nestjs-query-graphql": "^8.0.3",
     "@ptc-org/nestjs-query-typeorm": "^8.0.3",
+    "@repo/services-authorization": "workspace:*",
     "bullmq": "^5.39.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

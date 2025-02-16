@@ -23,7 +23,7 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
 # Build the project
@@ -55,9 +55,10 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY --from=builder /app/out/full/ .
+RUN pnpm turbo build --filter=@helios-apps/gateway
 # Build the project
 WORKDIR /app/apps/services/gateway
 EXPOSE 3000

@@ -8,8 +8,9 @@ import { type Auth0Config } from './interfaces/auth0-config.interface';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject(AUTH0_CONFIG) private config: Auth0Config,
+    @Inject(AUTH0_CONFIG) config: Auth0Config,
   ) {
+    console.log('JwtStrategy', config);
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,

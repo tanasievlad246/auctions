@@ -14,7 +14,13 @@ import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
 import { AuctionsService } from './auctions/auctions.service';
 import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
+import {
+ Auth0Module,
+//  JwtAuthGuard
+} from '@repo/services-authorization';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
+console.log(process.env);
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -44,6 +50,7 @@ import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
     }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
+      context: ({ req }) => ({ req }),
       playground: process.env.NODE_ENV !== 'production',
       autoSchemaFile: {
         path: join(process.cwd(), 'src/schemas/auctions.schema.graphql'),
@@ -55,6 +62,10 @@ import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
       imports: [
         NestjsQueryTypeOrmModule.forFeature([Auction, Bid, FreightHandling]),
         BullModule.registerQueue({ name: 'auctions' }),
+        Auth0Module.forRoot({
+          domain: process.env.AUTH0_DOMAIN || '',
+          audience: process.env.AUTH0_AUDIENCE || '',
+        }),
       ],
       services: [AuctionsService],
       resolvers: [
@@ -66,6 +77,9 @@ import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
           ServiceClass: AuctionsService,
           enableTotalCount: true,
           enableAggregate: true,
+          guards: [
+            JwtAuthGuard
+          ],
           read: {
             one: { name: 'auction' },
             many: { name: 'auctions' }

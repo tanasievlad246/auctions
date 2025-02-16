@@ -23,12 +23,14 @@
   "dependencies": {
     "@nestjs/common": "^11.0.7",
     "@nestjs/core": "^11.0.7",
+    "@nestjs/graphql": "^13.0.2",
     "@nestjs/passport": "^11.0.5",
     "@repo/typescript-config": "workspace:*",
     "jwks-rsa": "^3.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/node": "^22.13.0",
