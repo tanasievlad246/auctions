@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { IntrospectAndCompose } from '@apollo/gateway';
+import { AuthenticatedDataSource } from './authenticated-data-source';
 
 @Module({
   imports: [
@@ -12,10 +13,7 @@ import { IntrospectAndCompose } from '@apollo/gateway';
       server: {
         playground: process.env.NODE_ENV !== 'production',
         debug: process.env.NODE_ENV !== 'production',
-        context: ({ req }) => {
-          console.log(req.headers);
-          return { req };
-        },
+        context: ({ req }) => ({ req })
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
@@ -27,11 +25,15 @@ import { IntrospectAndCompose } from '@apollo/gateway';
           subgraphHealthCheck: true,
           logger: console,
         }),
+        buildService: ({ url }) => {
+          return new AuthenticatedDataSource({ url });
+        },
         debug: process.env.NODE_ENV !== 'production',
-      }
+      },
     })
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule { }
+
