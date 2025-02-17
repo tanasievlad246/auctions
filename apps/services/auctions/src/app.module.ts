@@ -15,12 +15,12 @@ import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
 import { AuctionsService } from './auctions/auctions.service';
 import { AuctionDto, AuctionItemDto } from './auctions/dto/auction.dto';
 import {
- Auth0Module,
-//  JwtAuthGuard
+  Auth0Module,
+  ClaimsGuard,
+  RequireClaims,
+  JwtAuthGuard
 } from '@repo/services-authorization';
-import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
-console.log(process.env);
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -78,11 +78,13 @@ console.log(process.env);
           enableTotalCount: true,
           enableAggregate: true,
           guards: [
-            JwtAuthGuard
+            JwtAuthGuard,
+            ClaimsGuard
           ],
+          decorators: [RequireClaims('hauler')],
           read: {
             one: { name: 'auction' },
-            many: { name: 'auctions' }
+            many: { name: 'auctions' },
           },
           create: { disabled: true },
           update: { disabled: true },

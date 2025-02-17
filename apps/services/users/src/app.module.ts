@@ -13,8 +13,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { join } from 'path';
 
-console.log(process.env)
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({

@@ -16,7 +16,7 @@ interface UseAuth0TokenOptions {
 
 export const useAuth0Token = (options: UseAuth0TokenOptions = {}) => {
     const {
-        audience = process.env.AUTH0_AUDIENCE,
+        audience = process.env.AUTH0_API_AUDIENCE,
         scope = '',
         refreshBuffer = 300 // 5 minutes default
     } = options;
@@ -30,10 +30,6 @@ export const useAuth0Token = (options: UseAuth0TokenOptions = {}) => {
 
     // Function to fetch new token
     const fetchToken = useCallback(async () => {
-        console.log('here');
-        console.log(isAuthenticated);
-        console.log(isLoading);
-
         if (!isAuthenticated && !isLoading) {
             setTokenState({
                 token: null,

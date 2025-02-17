@@ -10,8 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @Inject(AUTH0_CONFIG) config: Auth0Config,
   ) {
-    console.log('JwtStrategy', config);
-    super({
+    const jwtStrategyConfig = {
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
         rateLimit: true,
@@ -22,7 +21,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       audience: config.audience,
       issuer: `https://${config.domain}/`,
       algorithms: ['RS256'],
-    });
+    } as any;
+
+    super(jwtStrategyConfig);
   }
 
   async validate(payload: any) {

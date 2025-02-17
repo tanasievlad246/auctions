@@ -1,7 +1,7 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { CLAIMS_KEY } from '../decorators/claims.decorator';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { CanActivate, ExecutionContext, Injectable, SetMetadata } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { GqlExecutionContext } from "@nestjs/graphql";
+import { CLAIMS_KEY } from "@repo/services-authorization";
 
 @Injectable()
 export class ClaimsGuard implements CanActivate {

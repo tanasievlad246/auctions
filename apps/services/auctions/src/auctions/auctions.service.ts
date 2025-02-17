@@ -157,7 +157,6 @@ export class AuctionsService extends TypeOrmQueryService<Auction> {
             const bid = new Bid(bidDto);
             bid.auction = auction;
             const createdBid = await manager.save(Bid, bid);
-            console.log('AUCTION', auction);
             auction.bids.push(createdBid);
             await manager.save(auction);
             return createdBid;

@@ -3,12 +3,13 @@ import { ApiAuthToken } from '@/components/ApiAuthToken';
 
 export default async function Home() {
   const session = await auth0.getSession()
+  const LOGIN_URL = `/auth/login?audience=${process.env.AUTH0_API_AUDIENCE}`;
 
   if (!session) {
     return (
       <main>
         <a href="/auth/login?screen_hint=signup">Sign up</a>
-        <a href="/auth/login">Log in</a>
+        <a href={LOGIN_URL}>Log in</a>
       </main>
     )
   }

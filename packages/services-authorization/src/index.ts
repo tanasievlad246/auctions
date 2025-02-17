@@ -1,3 +1,5 @@
+import { ClaimsGuard } from './guards/claims.guard';
+
 export { Auth0Module } from './auth.module';
 
 // Export guards
