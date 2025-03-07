@@ -15,7 +15,7 @@ export async function TopMenu() {
                 <a href="/auth/login?screen_hint=signup">Sign up</a>
                 <a href={LOGIN_URL}>Log in</a>
             </nav>) : (<nav className="flex items-center gap-4">
-                <Bell fill="black" />
+                <Bell />
                 <UserNavAvatarButton session={session} />
             </nav>)}
         </TopBar>
