@@ -34,6 +34,7 @@ services:
       - app_network
     environment:
       - GATEWAY_URL=http://gateway:3000
+      - CLIENT_PORT=8080
 
   auctions:
     container_name: auctions
