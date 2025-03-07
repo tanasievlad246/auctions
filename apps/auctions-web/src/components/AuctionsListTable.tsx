@@ -24,6 +24,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useQuery, gql } from "@apollo/client"
+import { useUser } from "@auth0/nextjs-auth0"
 
 // Define the shipment data type
 interface Shipment {
@@ -113,6 +115,8 @@ export function AuctionsListTable() {
         const fetchData = async () => {
             setLoading(true)
             // Simulate API call delay
+            const response = await fetch('/api/auctions');
+            console.log(await response.json());
             await new Promise(resolve => setTimeout(resolve, 500))
             setLoading(false)
         }

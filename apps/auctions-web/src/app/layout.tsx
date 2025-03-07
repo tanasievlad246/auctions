@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { TopMenu } from "@/components/TopBar";
 import "./globals.css";
 import { auth0 } from "@/lib/auth0";
+import { ApolloWrapper } from "@/lib/ApolloWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,13 +26,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth0.getSession();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-hidden flex flex-col`}
       >
-        <TopMenu />
-        {session ? children : <h1>Authenticate</h1>}
+        <ApolloWrapper>
+          <TopMenu />
+          {session ? children : <h1>Authenticate</h1>}
+        </ApolloWrapper>
       </body>
     </html>
   )
