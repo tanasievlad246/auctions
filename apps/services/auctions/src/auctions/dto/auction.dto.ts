@@ -1,4 +1,4 @@
-import { Directive, Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, GraphQLISODateTime, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { FreightHandlingDto, FreightHandlingItem } from './freight-handling.dto';
 import { FilterableField, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions, UnPagedRelation } from '@ptc-org/nestjs-query-graphql'
 import { BidDto } from './bid.dto';
@@ -36,9 +36,9 @@ export class AuctionItemDto {
     title!: string;
     @FilterableField()
     description!: string;
-    @FilterableField()
+    @FilterableField(() => GraphQLISODateTime)
     startDate!: Date;
-    @FilterableField()
+    @FilterableField(() => GraphQLISODateTime)
     endDate!: Date;
     @FilterableField()
     startingPrice!: number;
@@ -46,6 +46,6 @@ export class AuctionItemDto {
     createdBy!: string;
     @FilterableField()
     status!: string;
-    @FilterableField()
+    @FilterableField(() => GraphQLISODateTime)
     createdAt!: Date;
 }

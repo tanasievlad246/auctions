@@ -1,9 +1,12 @@
 import { gql } from "@apollo/client";
-import { getClient, query } from "@/lib/apollo-client";
+import { query } from "@/lib/apollo-client";
 import { auth0 } from "@/lib/auth0";
 
-export async function GET() {
+export async function GET(request: Request) {
     const session = await auth0.getSession();
+    const { searchParams } = new URL(request.url);
+
+    console.log(searchParams);
 
     const AUCTIONS_LIST_QUERY = gql`
         query AuctionsList {
@@ -14,24 +17,33 @@ export async function GET() {
                 }
                 totalCount
                 nodes {
+                    id
                     createdAt
                     createdBy
                     description
                     endDate
                     startDate
                     startingPrice
+                    title
+                    status
                     loadings {
                         city
+                        startDate
+                        endDate
+                        country
                     }
                     unloadings {
                         city
+                        startDate
+                        endDate
+                        country
                     }
                     createdBy
                 }
             }
         }
     `;
-
+    console.log(session?.tokenSet.accessToken);
     const { data } = await query({
         query: AUCTIONS_LIST_QUERY,
         context: {

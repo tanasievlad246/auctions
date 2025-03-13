@@ -24,8 +24,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useQuery, gql } from "@apollo/client"
-import { useUser } from "@auth0/nextjs-auth0"
 
 // Define the shipment data type
 interface Shipment {
@@ -34,6 +32,8 @@ interface Shipment {
     pickupLocation: string
     pickupTime: string
     dropoffLocation: string
+    loadingsCount?: number
+    unloadingsCount?: number
     dropoffTime: string
     weight: string
     space: string
@@ -41,82 +41,38 @@ interface Shipment {
     price: string
 }
 
+function mapShipmentToTableRow(shipment: any): Shipment {
+    return ({
+        id: shipment.id,
+        title: shipment.title,
+        pickupLocation: `${shipment.loadings[0].country} ${shipment.loadings[0].city}`,
+        loadingsCount: shipment.loadings.length,
+        pickupTime: shipment.startDate,
+        dropoffLocation: `${shipment.unloadings[0].country} ${shipment.unloadings[0].city}`,
+        dropoffTime: shipment.endDate,
+        unloadingsCount: shipment.unloadings.length,
+        weight: "0",
+        space: "0",
+        totalKm: "0",
+        price: `${shipment.startingPrice} €`,
+    })
+}
+
 export function AuctionsListTable() {
-    // State for pagination and table data
     const [page, setPage] = React.useState(1)
     const [pageSize, setPageSize] = React.useState(5)
     const [totalPages, setTotalPages] = React.useState(4)
     const [loading, setLoading] = React.useState(false)
-    const [shipments, setShipments] = React.useState<Shipment[]>([
-        {
-            id: "1",
-            title: "Furniture Transport",
-            pickupLocation: "Berlin, DE",
-            pickupTime: "2025-03-15 09:00",
-            dropoffLocation: "Paris, FR",
-            dropoffTime: "2025-03-16 14:00",
-            weight: "2500 kg",
-            space: "15",
-            totalKm: "1050",
-            price: "1850€"
-        },
-        {
-            id: "2",
-            title: "Electronics Delivery",
-            pickupLocation: "Madrid, ES",
-            pickupTime: "2025-03-15 10:30",
-            dropoffLocation: "Lisbon, PT",
-            dropoffTime: "2025-03-15 18:00",
-            weight: "1800 kg",
-            space: "12",
-            totalKm: "625",
-            price: "980€"
-        },
-        {
-            id: "3",
-            title: "Medical Supplies",
-            pickupLocation: "Amsterdam, NL",
-            pickupTime: "2025-03-16 08:15",
-            dropoffLocation: "Brussels, BE",
-            dropoffTime: "2025-03-16 13:30",
-            weight: "950 kg",
-            space: "8",
-            totalKm: "210",
-            price: "650€"
-        },
-        {
-            id: "4",
-            title: "Clothing Shipment",
-            pickupLocation: "Milan, IT",
-            pickupTime: "2025-03-17 07:45",
-            dropoffLocation: "Vienna, AT",
-            dropoffTime: "2025-03-18 11:00",
-            weight: "1250 kg",
-            space: "9",
-            totalKm: "890",
-            price: "1200€"
-        },
-        {
-            id: "5",
-            title: "Automotive Parts",
-            pickupLocation: "Stuttgart, DE",
-            pickupTime: "2025-03-18 09:30",
-            dropoffLocation: "Munich, DE",
-            dropoffTime: "2025-03-18 15:45",
-            weight: "3200 kg",
-            space: "18",
-            totalKm: "220",
-            price: "780€"
-        }
-    ])
+    const [shipments, setShipments] = React.useState<Shipment[]>([])
 
-    // Simulate a server request when page or pageSize changes
     React.useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
-            // Simulate API call delay
             const response = await fetch('/api/auctions');
-            console.log(await response.json());
+            const { data } = await response.json();
+            console.log(data);
+            setShipments(data.auctions.nodes.map(mapShipmentToTableRow));
+            setTotalPages(data.auctions.totalCount / data.auctions.nodes.length)
             await new Promise(resolve => setTimeout(resolve, 500))
             setLoading(false)
         }
@@ -137,13 +93,11 @@ export function AuctionsListTable() {
         }
     }
 
-    // Handle page size change
     const handlePageSizeChange = (value: string) => {
         setPageSize(Number(value))
-        setPage(1) // Reset to first page when changing page size
+        setPage(1)
     }
 
-    // Handle shipment actions
     const handleViewDetails = (id: string) => {
         console.log(`View details for shipment ${id}`)
     }
@@ -165,8 +119,10 @@ export function AuctionsListTable() {
                             <TableHead>Title</TableHead>
                             <TableHead>Pickup Location</TableHead>
                             <TableHead>Pickup Time</TableHead>
+                            <TableHead>Total Loadings</TableHead>
                             <TableHead>Dropoff Location</TableHead>
                             <TableHead>Dropoff Time</TableHead>
+                            <TableHead>Total Unloadings</TableHead>
                             <TableHead>Weight</TableHead>
                             <TableHead>Space (m³)</TableHead>
                             <TableHead>Total KM</TableHead>
@@ -193,8 +149,10 @@ export function AuctionsListTable() {
                                     <TableCell>{shipment.title}</TableCell>
                                     <TableCell>{shipment.pickupLocation}</TableCell>
                                     <TableCell>{shipment.pickupTime}</TableCell>
+                                    <TableCell>{shipment.loadingsCount}</TableCell>
                                     <TableCell>{shipment.dropoffLocation}</TableCell>
                                     <TableCell>{shipment.dropoffTime}</TableCell>
+                                    <TableCell>{shipment.unloadingsCount}</TableCell>
                                     <TableCell>{shipment.weight}</TableCell>
                                     <TableCell>{shipment.space}</TableCell>
                                     <TableCell>{shipment.totalKm}</TableCell>

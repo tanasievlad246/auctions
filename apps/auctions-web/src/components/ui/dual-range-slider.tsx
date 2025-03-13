@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Slider, DualRangeSlider } from "@/components/ui/slider"
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label" // Assuming you have Label from shadcn
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label"
+import React from "react";
+import { DualRangeSlider } from "./slider";
 
-interface FormSliderProps {
+interface FormDualRangeSliderProps {
     // Core slider props
     label: string;
     min?: number;
@@ -35,7 +35,7 @@ interface FormSliderProps {
     onValueCommit?: (value: number[]) => void;
 }
 
-export function FormSlider({
+export function FormDualRangeSlider({
     // Core slider props
     label,
     min = 0,
@@ -63,10 +63,10 @@ export function FormSlider({
     // Event handlers
     onValueChange,
     onValueCommit,
-}: FormSliderProps) {
-    // Initialize state with defaultValue or [min] if not provided
+}: FormDualRangeSliderProps) {
+    // Initialize state with defaultValue or [min, max] if not provided
     const [sliderValue, setSliderValue] = React.useState<number[]>(
-        defaultValue || value || [min]
+        defaultValue || value || [min, max]
     );
 
     // If value is controlled externally, update internal state
@@ -84,9 +84,9 @@ export function FormSlider({
         }
     };
 
-    // Format value for display
+    // Format values for display
     const formattedValue = React.useMemo(() => {
-        return `${valuePrefix}${sliderValue[0]}${valueSuffix}`;
+        return `${valuePrefix}${sliderValue[0]}${valueSuffix} - ${valuePrefix}${sliderValue[1]}${valueSuffix}`;
     }, [sliderValue, valuePrefix, valueSuffix]);
 
     // Generate unique ID for label association
@@ -112,7 +112,7 @@ export function FormSlider({
                 )}
             </div>
 
-            <Slider
+            <DualRangeSlider
                 id={id}
                 name={name}
                 min={min}
@@ -133,48 +133,4 @@ export function FormSlider({
             )}
         </div>
     );
-}
-
-interface DualRangeSliderProps {
-    label: React.ReactNode | string;
-    values: number[];
-    onValueChange: (value: number[]) => void;
-    min?: number;
-    max?: number;
-    step?: number;
-    className?: string;
-    required?: boolean;
-    labelClassName?: string;
-}
-
-function DefaultDualRangeSlider({
-    label,
-    className,
-    values = [0, 100],
-    onValueChange,
-    min = 0,
-    max = 100,
-    step = 1,
-    required = false,
-    labelClassName,
-}: DualRangeSliderProps) {
-    return (
-        <div className={cn(className)}>
-            <DualRangeSlider
-                label={(value) => <Label className={cn(
-                    required && "after:content-['*'] after:ml-0.5 after:text-red-500",
-                    labelClassName
-                )}>{value}</Label>}
-                value={values}
-                onValueChange={onValueChange}
-                min={min}
-                max={max}
-                step={step}
-            />
-        </div>
-    );
-};
-
-export {
-    DefaultDualRangeSlider,
 }
