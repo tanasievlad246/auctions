@@ -17,13 +17,14 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
+import { ChevronLeft, ChevronRight, ExternalLink, MoreHorizontal } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import AuctionsSearchForm from "./AuctionsSearchForm"
 
 // Define the shipment data type
 interface Shipment {
@@ -113,6 +114,9 @@ export function AuctionsListTable() {
     return (
         <div className="w-full h-full flex flex-col">
             <div className="rounded-md border flex-1 overflow-auto">
+                <div className="px-2 py-2">
+                    <AuctionsSearchForm />
+                </div>
                 <Table>
                     <TableHeader className="sticky top-0 bg-background z-10">
                         <TableRow>
@@ -158,32 +162,7 @@ export function AuctionsListTable() {
                                     <TableCell>{shipment.totalKm}</TableCell>
                                     <TableCell>{shipment.price}</TableCell>
                                     <TableCell className="sticky right-0 bg-background">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                    <span className="sr-only">Open menu</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem
-                                                    onClick={() => handleViewDetails(shipment.id)}
-                                                >
-                                                    View details
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => handleEditShipment(shipment.id)}
-                                                >
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => handleDeleteShipment(shipment.id)}
-                                                    className="text-red-600"
-                                                >
-                                                    Delete
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        <Button size='sm' variant='secondary'><ExternalLink /></Button>
                                     </TableCell>
                                 </TableRow>
                             ))
