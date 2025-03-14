@@ -25,6 +25,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import AuctionsSearchForm from "./AuctionsSearchForm"
+import { useSearchParams } from "next/navigation"
 
 // Define the shipment data type
 interface Shipment {
@@ -65,6 +66,11 @@ export function AuctionsListTable() {
     const [totalPages, setTotalPages] = React.useState(4)
     const [loading, setLoading] = React.useState(false)
     const [shipments, setShipments] = React.useState<Shipment[]>([])
+    const searchParams = useSearchParams();
+
+    React.useEffect(() => {
+        console.log('searchParams updated', searchParams.get('q'));
+    }, [searchParams]);
 
     React.useEffect(() => {
         const fetchData = async () => {

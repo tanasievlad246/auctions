@@ -54,7 +54,7 @@ export default function AuctionsSearchForm() {
                 params.append(key, value);
             }
         }
-        console.log(params.toString());
+
         router.push(`?${params.toString()}`);
     }
 
