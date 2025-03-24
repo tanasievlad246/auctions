@@ -12,6 +12,8 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { join } from 'path';
+import { CacheModule } from '@nestjs/cache-manager';
+import { Auth0ManagementApiService } from './auth0/auth0-management-api.service';
 
 @Module({
   imports: [
@@ -46,10 +48,13 @@ import { join } from 'path';
       },
       sortSchema: true,
     }),
+    CacheModule.register(),
     NestjsQueryGraphQLModule.forFeature({
       imports: [
         TypeOrmModule.forFeature([User]),
-        BullModule.registerQueue({ name: 'auctions' })
+        BullModule.registerQueue({ name: 'auctions' }),
+        CacheModule.register(),
+        Auth0ManagementApiService,
       ],
       services: [UserService],
       resolvers: [{
@@ -79,6 +84,6 @@ import { join } from 'path';
     })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Auth0ManagementApiService],
 })
 export class AppModule { }

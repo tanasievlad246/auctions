@@ -69,7 +69,7 @@ export function AuctionsListTable() {
     const searchParams = useSearchParams();
 
     React.useEffect(() => {
-        console.log('searchParams updated', searchParams.get('q'));
+        console.log('searchParams updated', searchParams.entries());
     }, [searchParams]);
 
     React.useEffect(() => {

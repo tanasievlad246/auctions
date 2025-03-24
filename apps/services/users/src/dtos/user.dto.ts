@@ -10,15 +10,21 @@ export class UserDto {
     @FilterableField()
     email: string;
     @FilterableField()
-    role: string;
+    type: 'TRANSPORTER' | 'CLIENT';
     @FilterableField()
     createdAt: Date;
-    @FilterableField()
-    updatedAt: Date;
     @FilterableField()
     firstName: string;
     @FilterableField()
     lastName: string;
     @FilterableField()
     phoneNumber: string;
+    @FilterableField()
+    isActive: boolean;
+    @FilterableField()
+    companyName: string;
+    @FilterableField()
+    companyId: string;
+    @FilterableField()
+    updatedAt: Date;
 }

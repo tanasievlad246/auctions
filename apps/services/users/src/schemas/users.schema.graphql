@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+}
+
 input CreateOneUserDtoInput {
   """The record to create"""
   userDto: CreateUserDto!
@@ -136,37 +141,49 @@ input StringFieldComparison {
 }
 
 type UserDto {
+  companyId: String!
+  companyName: String!
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: ID!
+  isActive: Boolean!
   lastName: String!
   phoneNumber: String!
   role: String!
+  tenantOwner: Boolean!
   updatedAt: DateTime!
 }
 
 input UserDtoAggregateFilter {
   and: [UserDtoAggregateFilter!]
+  companyId: StringFieldComparison
+  companyName: StringFieldComparison
   createdAt: DateFieldComparison
   email: StringFieldComparison
   firstName: StringFieldComparison
   id: IDFilterComparison
+  isActive: BooleanFieldComparison
   lastName: StringFieldComparison
   or: [UserDtoAggregateFilter!]
   phoneNumber: StringFieldComparison
   role: StringFieldComparison
+  tenantOwner: BooleanFieldComparison
   updatedAt: DateFieldComparison
 }
 
 type UserDtoAggregateGroupBy {
+  companyId: String
+  companyName: String
   createdAt(by: GroupBy! = DAY): DateTime
   email: String
   firstName: String
   id: ID
+  isActive: Boolean
   lastName: String
   phoneNumber: String
   role: String
+  tenantOwner: Boolean
   updatedAt(by: GroupBy! = DAY): DateTime
 }
 
@@ -189,30 +206,40 @@ type UserDtoConnection {
 }
 
 type UserDtoCountAggregate {
+  companyId: Int
+  companyName: Int
   createdAt: Int
   email: Int
   firstName: Int
   id: Int
+  isActive: Int
   lastName: Int
   phoneNumber: Int
   role: Int
+  tenantOwner: Int
   updatedAt: Int
 }
 
 input UserDtoFilter {
   and: [UserDtoFilter!]
+  companyId: StringFieldComparison
+  companyName: StringFieldComparison
   createdAt: DateFieldComparison
   email: StringFieldComparison
   firstName: StringFieldComparison
   id: IDFilterComparison
+  isActive: BooleanFieldComparison
   lastName: StringFieldComparison
   or: [UserDtoFilter!]
   phoneNumber: StringFieldComparison
   role: StringFieldComparison
+  tenantOwner: BooleanFieldComparison
   updatedAt: DateFieldComparison
 }
 
 type UserDtoMaxAggregate {
+  companyId: String
+  companyName: String
   createdAt: DateTime
   email: String
   firstName: String
@@ -224,6 +251,8 @@ type UserDtoMaxAggregate {
 }
 
 type UserDtoMinAggregate {
+  companyId: String
+  companyName: String
   createdAt: DateTime
   email: String
   firstName: String
@@ -241,12 +270,16 @@ input UserDtoSort {
 }
 
 enum UserDtoSortFields {
+  companyId
+  companyName
   createdAt
   email
   firstName
   id
+  isActive
   lastName
   phoneNumber
   role
+  tenantOwner
   updatedAt
 }
