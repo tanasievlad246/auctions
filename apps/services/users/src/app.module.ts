@@ -54,9 +54,8 @@ import { Auth0ManagementApiService } from './auth0/auth0-management-api.service'
         TypeOrmModule.forFeature([User]),
         BullModule.registerQueue({ name: 'auctions' }),
         CacheModule.register(),
-        Auth0ManagementApiService,
       ],
-      services: [UserService],
+      services: [UserService, Auth0ManagementApiService],
       resolvers: [{
         DTOClass: UserDto,
         EntityClass: User,
@@ -84,6 +83,6 @@ import { Auth0ManagementApiService } from './auth0/auth0-management-api.service'
     })
   ],
   controllers: [AppController],
-  providers: [AppService, Auth0ManagementApiService],
+  providers: [AppService, Auth0ManagementApiService, UserService],
 })
 export class AppModule { }

@@ -150,8 +150,7 @@ type UserDto {
   isActive: Boolean!
   lastName: String!
   phoneNumber: String!
-  role: String!
-  tenantOwner: Boolean!
+  type: String!
   updatedAt: DateTime!
 }
 
@@ -167,8 +166,7 @@ input UserDtoAggregateFilter {
   lastName: StringFieldComparison
   or: [UserDtoAggregateFilter!]
   phoneNumber: StringFieldComparison
-  role: StringFieldComparison
-  tenantOwner: BooleanFieldComparison
+  type: StringFieldComparison
   updatedAt: DateFieldComparison
 }
 
@@ -182,8 +180,7 @@ type UserDtoAggregateGroupBy {
   isActive: Boolean
   lastName: String
   phoneNumber: String
-  role: String
-  tenantOwner: Boolean
+  type: String
   updatedAt(by: GroupBy! = DAY): DateTime
 }
 
@@ -215,8 +212,7 @@ type UserDtoCountAggregate {
   isActive: Int
   lastName: Int
   phoneNumber: Int
-  role: Int
-  tenantOwner: Int
+  type: Int
   updatedAt: Int
 }
 
@@ -232,8 +228,7 @@ input UserDtoFilter {
   lastName: StringFieldComparison
   or: [UserDtoFilter!]
   phoneNumber: StringFieldComparison
-  role: StringFieldComparison
-  tenantOwner: BooleanFieldComparison
+  type: StringFieldComparison
   updatedAt: DateFieldComparison
 }
 
@@ -246,7 +241,7 @@ type UserDtoMaxAggregate {
   id: ID
   lastName: String
   phoneNumber: String
-  role: String
+  type: String
   updatedAt: DateTime
 }
 
@@ -259,7 +254,7 @@ type UserDtoMinAggregate {
   id: ID
   lastName: String
   phoneNumber: String
-  role: String
+  type: String
   updatedAt: DateTime
 }
 
@@ -279,7 +274,6 @@ enum UserDtoSortFields {
   isActive
   lastName
   phoneNumber
-  role
-  tenantOwner
+  type
   updatedAt
 }
