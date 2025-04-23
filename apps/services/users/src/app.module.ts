@@ -14,6 +14,8 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/ap
 import { join } from 'path';
 import { CacheModule } from '@nestjs/cache-manager';
 import { Auth0ManagementApiService } from './auth0/auth0-management-api.service';
+import { UserResolver } from './user.resolver';
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
 
 @Module({
   imports: [
@@ -54,6 +56,7 @@ import { Auth0ManagementApiService } from './auth0/auth0-management-api.service'
         TypeOrmModule.forFeature([User]),
         BullModule.registerQueue({ name: 'auctions' }),
         CacheModule.register(),
+        NestjsQueryTypeOrmModule.forFeature([User]),
       ],
       services: [UserService, Auth0ManagementApiService],
       resolvers: [{
@@ -83,6 +86,6 @@ import { Auth0ManagementApiService } from './auth0/auth0-management-api.service'
     })
   ],
   controllers: [AppController],
-  providers: [AppService, Auth0ManagementApiService, UserService],
+  providers: [AppService, Auth0ManagementApiService, UserService, UserResolver],
 })
 export class AppModule { }

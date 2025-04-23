@@ -12,9 +12,4 @@ export class UserService extends TypeOrmQueryService<User> {
     ) {
         super(userRepository);
     }
-
-    async createUser(user: CreateUserDto): Promise<User> {
-        return this.userRepository.save(user);
-    }
 }
-

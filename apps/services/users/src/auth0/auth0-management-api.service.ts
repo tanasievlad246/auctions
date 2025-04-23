@@ -2,6 +2,7 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { Cache } from "@nestjs/cache-manager";
 import { ConfigService } from "@nestjs/config";
+import { CreateUserDto } from "src/dtos/create-user.dto";
 
 @Injectable()
 export class Auth0ManagementApiService {
@@ -13,8 +14,56 @@ export class Auth0ManagementApiService {
 
     }
 
-    async createUser() {
-        throw new Error('Not implemented');
+    async createUser(user: CreateUserDto, isOwnerUser: boolean = false) {
+        try {
+            const token = await this.getToken();
+            this.logger.debug('Creating user', { user });
+
+            const userData = {
+                email: user.email,
+                email_verified: false,
+                password: user.password,
+                connection: 'Username-Password-Authentication',
+                app_metadata: {},
+                user_metadata: {
+                    isOwner: isOwnerUser,
+                    tenantId: user.companyName,
+                    role: user.role,
+                },
+                given_name: user.firstName,
+                family_name: user.lastName,
+                verify_email: true,
+                blocked: false,
+            };
+
+            const fetchOptions = {
+                method: 'POST',
+                url: `https://${this.configService.get('AUTH0_DOMAIN')}/api/v2/users`,
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: `Bearer ${token}`,
+                },
+                data: JSON.stringify(userData),
+            };
+
+            this.logger.debug('Creating user', fetchOptions);
+            const response = await fetch(fetchOptions.url, {
+                body: fetchOptions.data,
+                headers: fetchOptions.headers,
+                method: fetchOptions.method,
+            });
+            const data = await response.json();
+            this.logger.debug('User created', data);
+            if (response.status !== 201) {
+                this.logger.error('Error creating user', data);
+                throw new InternalServerErrorException('Something happened on the server, please try again later');
+            }
+            this.logger.debug('User created', data);
+            return data;
+        } catch (error) {
+            this.logger.error('Error creating user', error);
+            throw new InternalServerErrorException('Something happened on the server, please try again later');
+        }
     }
 
     async updateUser() {

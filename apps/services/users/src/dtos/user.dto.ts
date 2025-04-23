@@ -10,7 +10,7 @@ export class UserDto {
     @FilterableField()
     email: string;
     @FilterableField()
-    type: 'TRANSPORTER' | 'CLIENT';
+    role: 'TRANSPORTER' | 'CLIENT';
     @FilterableField()
     createdAt: Date;
     @FilterableField()
@@ -27,4 +27,8 @@ export class UserDto {
     companyId: string;
     @FilterableField()
     updatedAt: Date;
+    @FilterableField()
+    isOwner: boolean;
+    @FilterableField()
+    tenantId: string;
 }

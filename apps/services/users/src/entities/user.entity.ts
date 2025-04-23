@@ -9,7 +9,7 @@ export class User {
     @Column({ unique: true })
     email: string;
     @Column()
-    role: string;
+    role: 'TRANSPORTER' | 'CLIENT';
     @Column({
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP'
@@ -27,4 +27,16 @@ export class User {
     lastName: string;
     @Column()
     phoneNumber: string;
+    @Column()
+    isOwner: boolean;
+    @Column()
+    isActive: boolean;
+    @Column()
+    tenantId: string;
+    @Column()
+    subscriptionId: string;
+    @Column()
+    companyName: string;
+    @Column()
+    companyId: string;
 }

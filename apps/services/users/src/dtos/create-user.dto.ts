@@ -13,4 +13,10 @@ export class CreateUserDto {
     lastName: string;
     @FilterableField()
     phoneNumber: string;
+    @FilterableField()
+    password: string;
+    @FilterableField()
+    companyName: string;
+    @FilterableField()
+    isOwner?: boolean;
 }
